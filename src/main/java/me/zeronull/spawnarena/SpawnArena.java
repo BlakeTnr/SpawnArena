@@ -12,6 +12,7 @@ import me.zeronull.spawnarena.events.ArenaPlayerLeave;
 import me.zeronull.spawnarena.events.ArenaPlayerLeaveAreaEvent;
 import me.zeronull.spawnarena.events.ArenaPreventCraftingSlot;
 import me.zeronull.spawnarena.events.ArenaWorldguardPvPEvent;
+import me.zeronull.spawnarena.events.PlayerLeaveSpawn;
 import me.zeronull.spawnarena.events.QueuePlayerLeave;
 
 public class SpawnArena extends JavaPlugin {
@@ -27,6 +28,7 @@ public class SpawnArena extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerLeave(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerLeaveAreaEvent(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new QueuePlayerLeave(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerLeaveSpawn(), this);
     }
 
     private void registerCommands() {
