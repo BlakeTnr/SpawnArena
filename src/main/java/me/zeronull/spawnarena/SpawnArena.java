@@ -44,6 +44,6 @@ public class SpawnArena extends JavaPlugin {
     }
 
     public void onDisable() {
-        arena.endFight();
+        arena.getFight().endFight();
     }
 }

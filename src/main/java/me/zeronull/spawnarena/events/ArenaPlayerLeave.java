@@ -6,6 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.zeronull.spawnarena.ArenaState;
+import me.zeronull.spawnarena.Fight;
+import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
 
 public class ArenaPlayerLeave implements Listener {
@@ -14,16 +16,20 @@ public class ArenaPlayerLeave implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = (Player) event.getPlayer();
 
-        if(!SpawnArena.arena.isFighter(player)) {
+        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
             return;
         }
 
-        if(SpawnArena.arena.getState() == ArenaState.INITALIZING) {
+        if(!SpawnArena.arena.getFight().isFighter(player)) {
             return;
         }
 
-        SpawnArena.arena.announceWinner(player);
-        SpawnArena.arena.endFight();
+        if(SpawnArena.arena.getFight().getState() == FightState.INITALIZING) {
+            return;
+        }
+
+        SpawnArena.arena.getFight().announceWinner(player);
+        SpawnArena.arena.getFight().endFight();
     }
     
 }

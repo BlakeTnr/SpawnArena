@@ -7,6 +7,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import me.zeronull.spawnarena.ArenaState;
+import me.zeronull.spawnarena.Fight;
+import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
 
 public class ArenaPlayerLeaveAreaEvent implements Listener {
@@ -15,17 +17,21 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
     public void onPlayerTeleportOut(PlayerTeleportEvent event) {
         Player player = (Player) event.getPlayer();
 
-        if(!SpawnArena.arena.isFighter(player)) {
+        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
             return;
         }
 
-        if(SpawnArena.arena.getState() == ArenaState.INITALIZING || SpawnArena.arena.getState() == ArenaState.ENDING) {
+        if(!SpawnArena.arena.getFight().isFighter(player)) {
+            return;
+        }
+
+        if(SpawnArena.arena.getFight().getState() == FightState.ENDING || SpawnArena.arena.getFight().getState() == FightState.INITALIZING) {
             return;
         }
 
         if(event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.UNKNOWN) {
-            SpawnArena.arena.announceWinner(player);
-            SpawnArena.arena.endFight();
+            SpawnArena.arena.getFight().announceWinner(player);
+            SpawnArena.arena.getFight().endFight();
         }
     }
     

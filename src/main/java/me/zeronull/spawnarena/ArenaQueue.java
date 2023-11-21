@@ -36,10 +36,10 @@ public class ArenaQueue {
     }
 
     public void tryStartFight() {
-        boolean noCurrentFight = !arena.isInUse();
+        boolean noCurrentFight = arena.arenaState == ArenaState.EMPTY;
         if(queueHasAtLeast2Players() && noCurrentFight) {
             Player[] twoOldest = pop2OldestPlayers();
-            arena.initiateFight(twoOldest[0], twoOldest[1]);
+            new Fight().initiateFight(twoOldest[0], twoOldest[1], arena);
         }
     }
     

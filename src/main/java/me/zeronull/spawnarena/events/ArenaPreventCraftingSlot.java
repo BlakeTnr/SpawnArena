@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.CraftingInventory;
 
+import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.SpawnArena;
 import net.md_5.bungee.api.ChatColor;
 
@@ -17,7 +18,11 @@ public class ArenaPreventCraftingSlot implements Listener {
     public void onClickInventory(final InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
-        if(!SpawnArena.arena.isFighter(player)) {
+        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
+            return;
+        }
+
+        if(!SpawnArena.arena.getFight().isFighter(player)) {
             return;
         }
 
@@ -33,7 +38,11 @@ public class ArenaPreventCraftingSlot implements Listener {
     public void onInventoryDrag(final InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
 
-        if(!SpawnArena.arena.isFighter(player)) {
+        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
+            return;
+        }
+
+        if(!SpawnArena.arena.getFight().isFighter(player)) {
             return;
         }
 

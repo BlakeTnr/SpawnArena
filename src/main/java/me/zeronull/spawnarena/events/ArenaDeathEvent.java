@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.SpawnArena;
 
 public class ArenaDeathEvent implements Listener {
@@ -16,8 +17,12 @@ public class ArenaDeathEvent implements Listener {
         }
 
         Player defender = (Player) event.getEntity();
+
+        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
+            return;
+        }
         
-        if(!(SpawnArena.arena.isFighter(defender))) {
+        if(!(SpawnArena.arena.getFight().isFighter(defender))) {
             return;
         }
 
@@ -30,7 +35,7 @@ public class ArenaDeathEvent implements Listener {
         }
 
         event.setCancelled(true);
-        SpawnArena.arena.announceWinner(defender);
-        SpawnArena.arena.endFight();
+        SpawnArena.arena.getFight().announceWinner(defender);
+        SpawnArena.arena.getFight().endFight();
     }
 }
