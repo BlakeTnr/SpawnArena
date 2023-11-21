@@ -1,10 +1,13 @@
-package me.zeronull.spawnarena;
+package me.zeronull.spawnarena.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.sk89q.worldguard.bukkit.protection.events.DisallowedPVPEvent;
+
+import me.zeronull.spawnarena.ArenaState;
+import me.zeronull.spawnarena.SpawnArena;
 
 public class ArenaWorldguardPvPEvent implements Listener {
     @EventHandler
@@ -16,7 +19,7 @@ public class ArenaWorldguardPvPEvent implements Listener {
         Player damager = (Player) event.getAttacker();
         Player defender = (Player) event.getDefender();
 
-        if(SpawnArena.arena.isInitializing) {
+        if(SpawnArena.arena.getState() == ArenaState.INITALIZING) {
             return;
         }
 

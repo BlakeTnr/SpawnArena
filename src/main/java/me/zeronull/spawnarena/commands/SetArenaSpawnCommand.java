@@ -1,13 +1,12 @@
-package me.zeronull.spawnarena;
+package me.zeronull.spawnarena.commands;
 
-import java.io.File;
-import java.nio.file.Path;
-
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.zeronull.spawnarena.ConfigHandler;
 import net.md_5.bungee.api.ChatColor;
 
 public class SetArenaSpawnCommand implements CommandExecutor {
@@ -31,25 +30,18 @@ public class SetArenaSpawnCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        SpawnArena plugin = SpawnArena.getPlugin(SpawnArena.class);
-
         int spawnNumber = Integer.parseInt(args[0]);
-        if(spawnNumber == 1) {
-            GameConfig config = plugin.getCustomConfig();
-            config.spawnPoint1 = player.getLocation();
-            plugin.saveCustomConfig(config);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccess!"));
-            return true;
-        } else if(spawnNumber == 2) {
-            GameConfig config = plugin.getCustomConfig();
-            config.spawnPoint2 = player.getLocation();
-            plugin.saveCustomConfig(config);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccess!"));
-            return true;
-        } else {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cImproper usage!"));
+
+        if(spawnNumber != 1 && spawnNumber != 2) {
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cImproper spawn point number!"));
             return true;
         }
+
+        Location location = player.getLocation();
+        ConfigHandler configHandler = ConfigHandler.getInstance();
+        configHandler.setSpawnpoint(location, spawnNumber);
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccess!"));
+        return true;
     }
     
 }

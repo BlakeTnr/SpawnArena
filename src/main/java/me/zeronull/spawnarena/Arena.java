@@ -4,27 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
-
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.sk89q.worldguard.bukkit.protection.events.DisallowedPVPEvent;
-
-import net.md_5.bungee.api.chat.hover.content.Item;
 
 public class Arena implements Listener {
-    ArenaQueue queue;
+    // Todo: Refactor this into an Arena & Fight class
+    public ArenaQueue queue;
     Location spawnPoint1;
     Location spawnPoint2;
     Location previousLocation1;
@@ -37,14 +24,17 @@ public class Arena implements Listener {
     ItemStack[] armorContents2;
     byte[] inventoryStream1;
     byte[] inventoryStream2;
-    boolean isInitializing = false;
-    boolean isEnding = false;
+    private ArenaState arenaState = ArenaState.EMPTY;
     
     
     int level1;
     int level2;
     float exp1;
     float exp2;
+
+    public ArenaState getState() {
+        return this.arenaState;
+    }
 
     public Arena(Location spawnPoint1, Location spawnPoint2) {
         this.spawnPoint1 = spawnPoint1;
@@ -60,7 +50,7 @@ public class Arena implements Listener {
     }
     
     public void initiateFight(Player fighter1, Player fighter2) {
-        isInitializing = true;
+        this.arenaState = ArenaState.INITALIZING;
         this.fighter1 = fighter1;
         this.fighter2 = fighter2;
 
@@ -90,7 +80,6 @@ public class Arena implements Listener {
 
                 if(counter == 0) {
                     startFight();
-                    isInitializing = false;
                     this.cancel();
                 } else {
                     fighter1.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Starting in " + counter + "..."));
@@ -130,6 +119,7 @@ public class Arena implements Listener {
         
         fighter1.teleport(spawnPoint1);
         fighter2.teleport(spawnPoint2);
+        this.arenaState = ArenaState.IN_FIGHT;
     }
 
     public boolean isInUse() {
@@ -137,14 +127,14 @@ public class Arena implements Listener {
     }
 
     public void cancelFight() {
-        isEnding = true;
+        this.arenaState = ArenaState.ENDING;
         fighter1 = null;
         fighter2 = null;
-        isEnding = false;
+        this.arenaState = ArenaState.EMPTY;
     }
 
     public void endFight() {
-        isEnding = true;
+        this.arenaState = ArenaState.ENDING;
         fighter1.closeInventory();
         fighter2.closeInventory();
         fighter1.teleport(previousLocation1);
@@ -163,7 +153,7 @@ public class Arena implements Listener {
         fighter2.getInventory().setArmorContents(armorContents2);
         fighter1 = null;
         fighter2 = null;
-        isEnding = false;
+        this.arenaState = ArenaState.EMPTY;
 
         this.queue.tryStartFight();
     }

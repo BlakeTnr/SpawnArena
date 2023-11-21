@@ -1,10 +1,13 @@
-package me.zeronull.spawnarena;
+package me.zeronull.spawnarena.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
+import me.zeronull.spawnarena.ArenaState;
+import me.zeronull.spawnarena.SpawnArena;
 
 public class ArenaPlayerLeaveAreaEvent implements Listener {
 
@@ -16,7 +19,7 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
             return;
         }
 
-        if(SpawnArena.arena.isInitializing || SpawnArena.arena.isEnding) {
+        if(SpawnArena.arena.getState() == ArenaState.INITALIZING || SpawnArena.arena.getState() == ArenaState.ENDING) {
             return;
         }
 

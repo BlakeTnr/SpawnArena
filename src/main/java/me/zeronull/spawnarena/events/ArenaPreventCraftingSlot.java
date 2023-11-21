@@ -1,17 +1,14 @@
-package me.zeronull.spawnarena;
+package me.zeronull.spawnarena.events;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.CraftingInventory;
 
+import me.zeronull.spawnarena.SpawnArena;
 import net.md_5.bungee.api.ChatColor;
 
 public class ArenaPreventCraftingSlot implements Listener {

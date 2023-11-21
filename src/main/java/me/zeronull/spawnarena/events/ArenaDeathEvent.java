@@ -1,11 +1,12 @@
-package me.zeronull.spawnarena;
+package me.zeronull.spawnarena.events;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+
+import me.zeronull.spawnarena.SpawnArena;
 
 public class ArenaDeathEvent implements Listener {
     @EventHandler

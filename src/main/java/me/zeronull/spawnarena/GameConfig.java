@@ -1,6 +1,5 @@
 package me.zeronull.spawnarena;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import de.exlll.configlib.Comment;
