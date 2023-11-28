@@ -1,16 +1,16 @@
 package me.zeronull.spawnarena;
 
-import java.io.File;
-import java.nio.file.Path;
-
-import org.bukkit.Location;
-
 import de.exlll.configlib.ConfigLib;
 import de.exlll.configlib.YamlConfigurationProperties;
 import de.exlll.configlib.YamlConfigurations;
+import org.bukkit.Location;
+
+import java.io.File;
+import java.nio.file.Path;
 
 public class ConfigHandler {
     private static ConfigHandler config;
+    private static GameConfig gameConfig;
 
     private ConfigHandler() {
     }
@@ -53,6 +53,9 @@ public class ConfigHandler {
     }
 
     public GameConfig getCustomConfig() {
+        if (gameConfig != null)
+            return gameConfig;
+
         YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
                 .build();
 
@@ -65,10 +68,10 @@ public class ConfigHandler {
                 properties
         );
 
-        return config;
+        return gameConfig = config;
     }
 
-    Arena registerArenaFromConfig() {
+    protected Arena registerArenaFromConfig() {
         GameConfig gameConfig = this.getCustomConfig();
         Arena arena = new Arena(gameConfig.spawnPoint1, gameConfig.spawnPoint2);
         ArenaQueue queue = ArenaQueue.getInstance();

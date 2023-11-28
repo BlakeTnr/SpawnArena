@@ -1,8 +1,8 @@
 package me.zeronull.spawnarena;
 
-import java.util.ArrayList;
-
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 public class ArenaQueue {
     Arena arena;

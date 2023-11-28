@@ -1,15 +1,16 @@
 package me.zeronull.spawnarena.events;
 
+import me.zeronull.spawnarena.Fight;
+import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import me.zeronull.spawnarena.Fight;
-import me.zeronull.spawnarena.SpawnArena;
-
 public class ArenaDeathEvent implements Listener {
+    public static final Material BYPASS_ITEM = Material.TOTEM_OF_UNDYING;
+
     @EventHandler
     public void onPlayerDeath(EntityDamageEvent event) {
         if(!(event.getEntity() instanceof Player)) {
@@ -30,7 +31,7 @@ public class ArenaDeathEvent implements Listener {
             return;
         }
 
-        if(defender.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING) {
+        if(defender.getInventory().getItemInOffHand().getType() == BYPASS_ITEM || defender.getInventory().getItemInMainHand().getType() == BYPASS_ITEM) {
             return;
         }
 

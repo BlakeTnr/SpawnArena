@@ -1,16 +1,14 @@
 package me.zeronull.spawnarena;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class Fight {
     // Todo: pull out some of the code from Arena into here
@@ -32,10 +30,14 @@ public class Fight {
 
     public void cancelFight() {
         this.fightState = FightState.ENDING;
+
         fighter1 = null;
         fighter2 = null;
+
         this.fightState = FightState.OVER;
+
         this.arena.clearFight();
+
         this.arena.arenaState = ArenaState.EMPTY;
     }
 
@@ -55,30 +57,14 @@ public class Fight {
 
             @Override
             public void run() {
-                if(!fighter1.isOnline()) {
-                    String displayName = fighter1.getDisplayName();
-                    fighter2.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c" + displayName + " has left... cancelling fight"));
-                    cancelFight();
-                    arena.queue.tryStartFight();
-                    this.cancel();
+                if (onlineCheck(this))
                     return;
-                }
-
-                if(!fighter2.isOnline()) {
-                    String displayName = fighter2.getDisplayName();
-                    fighter1.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c" + displayName + " has left... cancelling fight"));
-                    cancelFight();
-                    arena.queue.tryStartFight();
-                    this.cancel();
-                    return;
-                }
 
                 if(counter == 0) {
                     startFight();
                     this.cancel();
                 } else {
-                    fighter1.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Starting in " + counter + "..."));
-                    fighter2.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Starting in " + counter + "..."));
+                    sendFightersMessage(ChatColor.translateAlternateColorCodes('&', "&6Starting in " + counter + "..."));
                     counter--;
                 }
             }
@@ -86,9 +72,62 @@ public class Fight {
         }.runTaskTimer(plugin, 20L, 20L);
     }
 
+    private boolean onlineCheck(final BukkitRunnable runnable) {
+        for (final Player fighter : this.getFighters()) {
+            if (fighter.isOnline())
+                continue;
+
+            final String displayName = this.getOtherFighter(fighter).getDisplayName();
+            fighter.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c" + displayName + " has left... cancelling fight"));
+            runnable.cancel();
+            return true;
+        }
+
+        return false;
+    }
+
+    private void sendFightersMessage(final String message) {
+        for (final Player fighter : this.getFighters()) {
+            if (!this.isAvailable(fighter))
+                continue;
+
+            fighter.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+        }
+    }
+
+    private void performOnFighters(final Consumer<Player> action) {
+        for (final Player fighter : this.getFighters()) {
+            if (!this.isAvailable(fighter))
+                continue;
+
+            action.accept(fighter);
+        }
+    }
+
+    private boolean isAvailable(final Player p) {
+        return p != null && p.isOnline();
+    }
+
+    private List<Player> getFighters() {
+        return Arrays.asList(this.fighter1, this.fighter2);
+    }
+
+    private Player getOtherFighter(final Player fighter) {
+        for (final Player p : this.getFighters()) {
+            if (p.equals(fighter))
+                continue;
+
+            return p;
+        }
+
+        return null; // The other fighter could not be found
+    }
+
     public void startFight() {
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "invsave " + fighter1.getName());
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "invsave " + fighter2.getName());
+        Arena.ArenaUtils.kickOutLingeringPlayers();
+
+        this.performOnFighters(fighter -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "invsave " + fighter.getName()));
+
         preFightData1 = new PlayerPreFightData(fighter1);
         preFightData2 = new PlayerPreFightData(fighter2);
         

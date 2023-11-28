@@ -68,6 +68,11 @@
         <version>7.1.0-20230820.090836-10</version>
         <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20230618</version>
+    </dependency>
   </dependencies>
 
   <build>

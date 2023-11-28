@@ -1,25 +1,18 @@
 package me.zeronull.spawnarena;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import me.zeronull.spawnarena.commands.JoinArenaQueueCommand;
 import me.zeronull.spawnarena.commands.SetArenaSpawnCommand;
-import me.zeronull.spawnarena.events.ArenaCommandEvent;
-import me.zeronull.spawnarena.events.ArenaDeathEvent;
-import me.zeronull.spawnarena.events.ArenaDropItemEvent;
-import me.zeronull.spawnarena.events.ArenaPlayerLeave;
-import me.zeronull.spawnarena.events.ArenaPlayerLeaveAreaEvent;
-import me.zeronull.spawnarena.events.ArenaPreventCraftingSlot;
-import me.zeronull.spawnarena.events.ArenaWorldguardPvPEvent;
-import me.zeronull.spawnarena.events.PlayerLeaveSpawn;
-import me.zeronull.spawnarena.events.QueuePlayerLeave;
+import me.zeronull.spawnarena.events.*;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpawnArena extends JavaPlugin {
     public static Arena arena;
 
     private void registerEvents() {
-        Bukkit.getServer().getPluginManager().registerEvents(new ArenaWorldguardPvPEvent(), this);
+        if (Arena.ArenaUtils.WORLD_EDIT_SUPPORT)
+            Bukkit.getServer().getPluginManager().registerEvents(new ArenaWorldguardPvPEvent(), this);
+
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaDeathEvent(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaCommandEvent(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaCommandEvent(), this);
@@ -29,6 +22,7 @@ public class SpawnArena extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerLeaveAreaEvent(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new QueuePlayerLeave(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerLeaveSpawn(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerJoinEvent(), this);
     }
 
     private void registerCommands() {

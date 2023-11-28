@@ -1,12 +1,11 @@
 package me.zeronull.spawnarena.events;
 
+import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
-
-import me.zeronull.spawnarena.SpawnArena;
 
 public class PlayerLeaveSpawn implements Listener {
     @EventHandler
