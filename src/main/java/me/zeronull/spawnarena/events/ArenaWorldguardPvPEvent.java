@@ -2,16 +2,21 @@ package me.zeronull.spawnarena.events;
 
 import com.sk89q.worldguard.bukkit.protection.events.DisallowedPVPEvent;
 import me.zeronull.spawnarena.Arena;
+import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.Optional;
+
 public class ArenaWorldguardPvPEvent implements Listener {
     @EventHandler
     public void allowPlayerPVP(DisallowedPVPEvent event) {
-        if(!(event.getAttacker() instanceof Player) || !(event.getDefender() instanceof Player)) {
+        //Condition 'event.getAttacker() instanceof Player' is redundant and can be replaced with a null check
+        //Condition 'event.getDefender() instanceof Player' is redundant and can be replaced with a null check
+        if (event.getAttacker() == null || event.getDefender() == null) {
             return;
         }
 
@@ -30,7 +35,12 @@ public class ArenaWorldguardPvPEvent implements Listener {
 
         final Arena arena = SpawnArena.arenas.of(damager);
 
-        if (arena.getFight().get().getState() == FightState.INITALIZING)
+        Optional<Fight> optionalFight = arena.getFight();
+        if (optionalFight.isEmpty()) {
+            return;
+        }
+
+        if (optionalFight.get().getState() == FightState.INITALIZING)
             return;
 
 //        if(SpawnArena.arena.getFight().getState() == FightState.INITALIZING) {

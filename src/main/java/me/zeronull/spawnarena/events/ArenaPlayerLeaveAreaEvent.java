@@ -10,32 +10,38 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
+import java.util.Optional;
+
 public class ArenaPlayerLeaveAreaEvent implements Listener {
 
     @EventHandler
     public void onPlayerTeleportOut(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
 
-        if(!SpawnArena.arenas.hasActiveFight()) {
+        if (!SpawnArena.arenas.hasActiveFight()) {
             return;
         }
 
-        if(!SpawnArena.arenas.hasFighter(player)) {
+        if (!SpawnArena.arenas.hasFighter(player)) {
             return;
         }
 
         final Arena arena = SpawnArena.arenas.of(player);
-        final Fight fight = arena.getFight().get();
+        Optional<Fight> optionalFight = arena.getFight();
+        if (optionalFight.isEmpty()) {
+            return;
+        }
+        final Fight fight = optionalFight.get();
 
-        if(fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING) {
             return;
         }
 
-        if(event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.UNKNOWN) {
+        if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.UNKNOWN) {
             fight.announceWinner(player);
             fight.endFight();
         }
     }
-    
+
 }
 

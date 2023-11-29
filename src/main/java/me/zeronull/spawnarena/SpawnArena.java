@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpawnArena extends JavaPlugin {
@@ -18,16 +19,23 @@ public class SpawnArena extends JavaPlugin {
         if (Arena.ArenaUtils.WORLD_EDIT_SUPPORT)
             Bukkit.getServer().getPluginManager().registerEvents(new ArenaWorldguardPvPEvent(), this);
 
-        Bukkit.getServer().getPluginManager().registerEvents(new ArenaDeathEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ArenaCommandEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ArenaCommandEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ArenaDropItemEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ArenaPreventCraftingSlot(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerLeave(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerLeaveAreaEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new QueuePlayerLeave(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerLeaveSpawn(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerJoinEvent(), this);
+        this.registerListeners(
+                new ArenaDeathEvent(),
+                new ArenaCommandEvent(),
+                new ArenaDropItemEvent(),
+                new ArenaPreventCraftingSlot(),
+                new ArenaPlayerLeave(),
+                new ArenaPlayerLeaveAreaEvent(),
+                new QueuePlayerLeave(),
+                new PlayerLeaveSpawn(),
+                new ArenaPlayerJoinEvent()
+        );
+    }
+
+    private void registerListeners(Listener... listeners) {
+        for (Listener listener : listeners) {
+            getServer().getPluginManager().registerEvents(listener, this);
+        }
     }
 
     private void registerCommands() {
@@ -39,10 +47,12 @@ public class SpawnArena extends JavaPlugin {
     private void registerCommand(final String cmdName, final CommandExecutor cmd) {
         final PluginCommand command = super.getCommand(cmdName);
 
-        command.setExecutor(cmd);
+        if (command != null) {
+            command.setExecutor(cmd);
 
-        if (cmd instanceof TabCompleter)
-            command.setTabCompleter((TabCompleter) cmd);
+            if (cmd instanceof TabCompleter)
+                command.setTabCompleter((TabCompleter) cmd);
+        }
     }
 
     public void onEnable() {

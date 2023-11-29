@@ -16,7 +16,8 @@ public class ConfigHandler {
     }
 
     public static ConfigHandler getInstance() {
-        if(!(config instanceof ConfigHandler)) {
+        //Condition 'config instanceof ConfigHandler' is redundant and can be replaced with a null check
+        if (config == null) {
             config = new ConfigHandler();
         }
 
@@ -101,5 +102,5 @@ public class ConfigHandler {
 //        }
 //        ConfigHandler.getInstance().saveCustomConfig(config);
 //    }
-    
+
 }

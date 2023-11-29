@@ -13,11 +13,9 @@ public class ArenaDeathEvent implements Listener {
 
     @EventHandler
     public void onPlayerDeath(EntityDamageEvent event) {
-        if(!(event.getEntity() instanceof Player)) {
+        if(!(event.getEntity() instanceof Player defender)) {
             return;
         }
-
-        Player defender = (Player) event.getEntity();
 
         if (!SpawnArena.arenas.hasActiveFight()) {
             return;
