@@ -1,5 +1,6 @@
 package me.zeronull.spawnarena.events;
 
+import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
@@ -13,23 +14,26 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
 
     @EventHandler
     public void onPlayerTeleportOut(PlayerTeleportEvent event) {
-        Player player = (Player) event.getPlayer();
+        Player player = event.getPlayer();
 
-        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
+        if(!SpawnArena.arenas.hasActiveFight()) {
             return;
         }
 
-        if(!SpawnArena.arena.getFight().isFighter(player)) {
+        if(!SpawnArena.arenas.hasFighter(player)) {
             return;
         }
 
-        if(SpawnArena.arena.getFight().getState() == FightState.ENDING || SpawnArena.arena.getFight().getState() == FightState.INITALIZING) {
+        final Arena arena = SpawnArena.arenas.of(player);
+        final Fight fight = arena.getFight().get();
+
+        if(fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING) {
             return;
         }
 
         if(event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.UNKNOWN) {
-            SpawnArena.arena.getFight().announceWinner(player);
-            SpawnArena.arena.getFight().endFight();
+            fight.announceWinner(player);
+            fight.endFight();
         }
     }
     

@@ -1,6 +1,5 @@
 package me.zeronull.spawnarena.events;
 
-import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.SpawnArena;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,13 +16,11 @@ public class ArenaPreventCraftingSlot implements Listener {
     public void onClickInventory(final InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
 
-        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
+        if (!SpawnArena.arenas.hasActiveFight())
             return;
-        }
 
-        if(!SpawnArena.arena.getFight().isFighter(player)) {
+        if (!SpawnArena.arenas.hasFighter(player))
             return;
-        }
 
         if (!(event.getSlotType() == InventoryType.SlotType.CRAFTING)) {
             return;
@@ -37,13 +34,11 @@ public class ArenaPreventCraftingSlot implements Listener {
     public void onInventoryDrag(final InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
 
-        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
+        if (!SpawnArena.arenas.hasActiveFight())
             return;
-        }
 
-        if(!SpawnArena.arena.getFight().isFighter(player)) {
+        if (!SpawnArena.arenas.hasFighter(player))
             return;
-        }
 
         if (event.getInventory() instanceof CraftingInventory) {
             for (int slot : event.getRawSlots()) {

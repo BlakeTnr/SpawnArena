@@ -1,6 +1,5 @@
 package me.zeronull.spawnarena.events;
 
-import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.SpawnArena;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,11 +13,11 @@ public class ArenaCommandEvent implements Listener {
     public void onCommandExecution(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
+        if(!SpawnArena.arenas.hasActiveFight()) {
             return;
         }
 
-        if(!SpawnArena.arena.getFight().isFighter(player)) {
+        if(!SpawnArena.arenas.hasFighter(player)) {
             return;
         }
 

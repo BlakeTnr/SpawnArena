@@ -12,8 +12,8 @@ public class QueuePlayerLeave implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        if(SpawnArena.arena.queue.playerInQueue(player)) {
-            SpawnArena.arena.queue.removePlayer(player);
+        if(SpawnArena.arenas.isInQueue(player)) {
+            SpawnArena.arenas.fromQueued(player).queue.removePlayer(player);
         }
     }
 

@@ -1,6 +1,6 @@
 package me.zeronull.spawnarena.events;
 
-import me.zeronull.spawnarena.Fight;
+import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,13 +19,21 @@ public class ArenaDeathEvent implements Listener {
 
         Player defender = (Player) event.getEntity();
 
-        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
+        if (!SpawnArena.arenas.hasActiveFight()) {
             return;
         }
         
-        if(!(SpawnArena.arena.getFight().isFighter(defender))) {
+        if(!(SpawnArena.arenas.hasFighter(defender))) {
             return;
         }
+
+        final Arena arena = SpawnArena.arenas.of(defender);
+
+        if (!arena.isAllowDamage())
+            event.setDamage(0D);
+
+        if (!arena.isAllowPvp())
+            event.setCancelled(true);
 
         if(!((defender.getHealth() - event.getFinalDamage()) <= 0)) {
             return;
@@ -36,7 +44,10 @@ public class ArenaDeathEvent implements Listener {
         }
 
         event.setCancelled(true);
-        SpawnArena.arena.getFight().announceWinner(defender);
-        SpawnArena.arena.getFight().endFight();
+
+        arena.getFight().ifPresent(fight -> {
+            fight.announceWinner(defender);
+            fight.endFight();
+        });
     }
 }

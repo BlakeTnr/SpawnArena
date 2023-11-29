@@ -3,28 +3,30 @@ package me.zeronull.spawnarena;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ArenaQueue {
-    Arena arena;
-    private static ArenaQueue singletonInstance = null;
-    ArrayList<Player> playerQueue = new ArrayList<Player>();
+    public static final Map<Player, ArenaQueue> PLAYER_QUEUE_MAP = new HashMap<>();
 
-    private ArenaQueue() {
+    private final Arena arena;
+//    private static ArenaQueue singletonInstance = null;
+    private final ArrayList<Player> playerQueue = new ArrayList<Player>();
+
+    public ArenaQueue(final Arena arena) {
+        this.arena = arena;
     }
 
-    public static ArenaQueue getInstance() {
-        if(!(singletonInstance instanceof ArenaQueue)) {
-            singletonInstance = new ArenaQueue();
-        }
-        return singletonInstance;
-    }
+//    public static ArenaQueue getInstance() {
+//        if(!(singletonInstance instanceof ArenaQueue)) {
+//            singletonInstance = new ArenaQueue();
+//        }
+//        return singletonInstance;
+//    }
 
     public void removePlayer(Player player) {
         playerQueue.remove(player);
-    }
-
-    public void setArena(Arena arena) {
-        this.arena = arena;
+        PLAYER_QUEUE_MAP.remove(player);
     }
 
     private boolean queueHasAtLeast2Players() {
@@ -37,6 +39,7 @@ public class ArenaQueue {
 
     public void tryStartFight() {
         boolean noCurrentFight = arena.arenaState == ArenaState.EMPTY;
+
         if(queueHasAtLeast2Players() && noCurrentFight) {
             Player[] twoOldest = pop2OldestPlayers();
             new Fight().initiateFight(twoOldest[0], twoOldest[1], arena);
@@ -45,6 +48,7 @@ public class ArenaQueue {
     
     public void addPlayerToQueue(Player player) {
         playerQueue.add(player);
+        PLAYER_QUEUE_MAP.put(player, this);
         tryStartFight();
     }
 
@@ -52,10 +56,13 @@ public class ArenaQueue {
         int size = playerQueue.size();
         Player player1 = playerQueue.get(size-1);
         playerQueue.remove(size-1);
+        PLAYER_QUEUE_MAP.remove(player1);
+
         Player player2 = playerQueue.get(size-2);
         playerQueue.remove(size-2);
+        PLAYER_QUEUE_MAP.remove(player2);
 
-        Player[] twoOldest = {player1, player2};
+        Player[] twoOldest = { player1, player2 };
         return twoOldest;
     }
 
@@ -67,5 +74,9 @@ public class ArenaQueue {
         Player nextPlayer = playerQueue.get(0);
         playerQueue.remove(0);
         return nextPlayer;
+    }
+
+    public Arena getArena() {
+        return this.arena;
     }
 }

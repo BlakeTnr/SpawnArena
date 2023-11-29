@@ -1,7 +1,7 @@
 package me.zeronull.spawnarena.events;
 
 import com.sk89q.worldguard.bukkit.protection.events.DisallowedPVPEvent;
-import me.zeronull.spawnarena.Fight;
+import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.entity.Player;
@@ -18,16 +18,25 @@ public class ArenaWorldguardPvPEvent implements Listener {
         Player damager = event.getAttacker();
         Player defender = event.getDefender();
 
-        if(!(SpawnArena.arena.getFight() instanceof Fight)) {
-            return;
-        }
+//        System.out.println(!SpawnArena.arenas.hasActiveFight());
+//        System.out.println(!SpawnArena.arenas.hasFighter(damager));
+//        System.out.println(!SpawnArena.arenas.hasFighter(defender));
 
-        if(SpawnArena.arena.getFight().getState() == FightState.INITALIZING) {
+        if (!SpawnArena.arenas.hasActiveFight())
             return;
-        }
 
-        if(SpawnArena.arena.getFight().isFighter(damager) && SpawnArena.arena.getFight().isFighter(defender)) {
-            event.setCancelled(true);
-        }
+        if (!SpawnArena.arenas.hasFighter(damager) || !SpawnArena.arenas.hasFighter(defender))
+            return;
+
+        final Arena arena = SpawnArena.arenas.of(damager);
+
+        if (arena.getFight().get().getState() == FightState.INITALIZING)
+            return;
+
+//        if(SpawnArena.arena.getFight().getState() == FightState.INITALIZING) {
+//            return;
+//        }
+
+        event.setCancelled(true);
     }
 }

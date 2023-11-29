@@ -8,5 +8,22 @@ softdepend:
 commands:
   joinarenaqueue:
     description: join queue
+    permission: spawnarena.joinarenaqueue
+    permission-message: "§cYou don't have permission!"
   setarenaspawn:
     description: join queue
+    permission: spawnarena.setarenaspawn
+    permission-message: "§cYou don't have permission!"
+  createarena:
+    permission: spawnarena.createarena
+    permission-message: "§cYou don't have permission!"
+
+permissions:
+  spawnarena.setarenaspawn:
+    default: op
+  spawnarena.joinarenaqueue:
+    default: op
+  spawnarena.createarena:
+    default: op
+  spawnarena.allowcommandsinfight:
+    default: op

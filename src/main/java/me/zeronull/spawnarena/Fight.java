@@ -42,7 +42,7 @@ public class Fight {
     }
 
     public boolean isFighter(Player player) {
-        return (player.equals(fighter1) || player.equals(fighter2));
+        return this.getFighters().contains(player);
     }
 
     public void initiateFight(Player fighter1, Player fighter2, Arena arena) {
@@ -57,7 +57,9 @@ public class Fight {
 
             @Override
             public void run() {
-                if (onlineCheck(this))
+                final boolean onlineCheck = onlineCheck(this);
+
+                if (onlineCheck)
                     return;
 
                 if(counter == 0) {
@@ -77,8 +79,10 @@ public class Fight {
             if (fighter.isOnline())
                 continue;
 
-            final String displayName = this.getOtherFighter(fighter).getDisplayName();
-            fighter.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c" + displayName + " has left... cancelling fight"));
+            final String displayName = fighter.getDisplayName();
+            this.getOtherFighter(fighter).sendMessage(ChatColor.translateAlternateColorCodes('&', "&c" + displayName + " has left... cancelling fight"));
+            cancelFight();
+            arena.queue.tryStartFight();
             runnable.cancel();
             return true;
         }
@@ -130,6 +134,9 @@ public class Fight {
 
         preFightData1 = new PlayerPreFightData(fighter1);
         preFightData2 = new PlayerPreFightData(fighter2);
+
+        if (this.arena.isShouldClearItems())
+            this.performOnFighters(fighter -> fighter.getInventory().clear());
         
         this.arena.teleportFighters(fighter1, fighter2);
         this.fightState = FightState.IN_FIGHT;
@@ -141,9 +148,10 @@ public class Fight {
         this.preFightData2.restore();
         this.fightState = FightState.OVER;
         this.arena.clearFight();
-        this.arena.arenaState = ArenaState.EMPTY;
+//        this.arena.arenaState = ArenaState.EMPTY;
 
         this.arena.queue.tryStartFight();
+        this.arena.arenaState = ArenaState.EMPTY;
     }
 
     public void announceWinner(Player whoDied) {

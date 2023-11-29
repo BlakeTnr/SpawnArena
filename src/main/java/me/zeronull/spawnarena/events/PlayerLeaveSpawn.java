@@ -1,5 +1,6 @@
 package me.zeronull.spawnarena.events;
 
+import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,15 +13,15 @@ public class PlayerLeaveSpawn implements Listener {
     public void onPlayerLeaveSpawn(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
 
-        if(!SpawnArena.arena.queue.playerInQueue(player)) {
+        if(!SpawnArena.arenas.isInQueue(player)) {
             return;
         }
 
-        if(event.getTo().getWorld().getName().equalsIgnoreCase("SpawnWorld")) {
+        if(event.getTo().getWorld().getName().equalsIgnoreCase(Arena.SPAWN_WORLD)) {
             return;
         }
 
-        SpawnArena.arena.queue.removePlayer(player);
+        SpawnArena.arenas.fromQueued(player).queue.removePlayer(player);
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou've been removed from arena queue. You must stay in spawn to stay in queue."));
     }
 }

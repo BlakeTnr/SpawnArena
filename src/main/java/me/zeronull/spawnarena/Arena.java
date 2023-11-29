@@ -1,21 +1,19 @@
 package me.zeronull.spawnarena;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.metadata.MetadataValue;
 
 import java.util.List;
+import java.util.Optional;
 
-public class Arena implements Listener {
+public abstract class Arena extends ArenaOptions {
+    public static final String SPAWN_WORLD = "SpawnWorld";
+
     public static final class ArenaUtils {
         public static final boolean WORLD_EDIT_SUPPORT;
         public static final WorldGuard WORLD_GUARD_INSTANCE;
@@ -43,30 +41,28 @@ public class Arena implements Listener {
         }
 
         public static void kickOutLingeringPlayer(final Player p) {
-            final String regionName = ConfigHandler.getInstance().getCustomConfig().arenaRegion;
-
             if (!WORLD_EDIT_SUPPORT)
                 return;
 
+//            System.out.println(String.format("Vanished: %s", isVanished(p)));
             if (isVanished(p))
                 return;
 
+//            System.out.println(String.format("Spectator: %s", p.getGameMode() == GameMode.SPECTATOR));
             if (p.getGameMode() == GameMode.SPECTATOR)
                 return;
 
-            if (SpawnArena.arena.getFight() != null && SpawnArena.arena.getFight().isFighter(p))
+//            System.out.println(String.format("is Fighter: %s", SpawnArena.arenas.hasFighter(p)));
+            if (SpawnArena.arenas.hasFighter(p))
                 return;
 
-            final RegionQuery query = REGION_CONTAINER.createQuery();
-            final ApplicableRegionSet regionSet = query.getApplicableRegions(BukkitAdapter.adapt(p.getLocation()));
+            final Location loc = p.getLocation();
+            final Arena arena = SpawnArena.arenas.of(loc);
 
-            for (final ProtectedRegion region : regionSet) {
-                if (!region.getId().equals(regionName))
-                    continue;
+//            System.out.println(String.format("Arena is null: %s", arena == null));
 
-                p.performCommand(ConfigHandler.getInstance().getCustomConfig().warpCommand);
-                break;
-            }
+            if (arena != null)
+                p.performCommand(String.format("warp %s", arena.getArenaName()));
         }
 
         /**
@@ -90,13 +86,21 @@ public class Arena implements Listener {
     }
 
     public ArenaQueue queue;
-    ArenaState arenaState = ArenaState.EMPTY;
-    Location spawnPoint1;
-    Location spawnPoint2;
+    protected ArenaState arenaState = ArenaState.EMPTY;
+    protected String arenaName;
+    private Location spawnPoint1;
+    private Location spawnPoint2;
     private Fight fight;
 
-    public Arena(Location spawnPoint1, Location spawnPoint2) {
+    public Arena(String arenaName) {
+        this.arenaName = arenaName;
+    }
+
+    public void setSpawnPoint1(final Location spawnPoint1) {
         this.spawnPoint1 = spawnPoint1;
+    }
+
+    public void setSpawnPoint2(final Location spawnPoint2) {
         this.spawnPoint2 = spawnPoint2;
     }
 
@@ -109,8 +113,8 @@ public class Arena implements Listener {
         this.arenaState = ArenaState.IN_FIGHT;
     }
 
-    public Fight getFight() {
-        return fight;
+    public Optional<Fight> getFight() {
+        return Optional.ofNullable(fight);
     }
 
     public void clearFight() {
@@ -124,6 +128,34 @@ public class Arena implements Listener {
 
     public void setQueue(ArenaQueue queue) {
         this.queue = queue;
+    }
+
+    public String getArenaName() { return this.arenaName; }
+
+    public boolean isSetUp() {
+        return this.spawnPoint1 != null && this.spawnPoint2 != null;
+    }
+
+    /**
+     * Convert Arena class to any of its subtypes
+     * @param clazz
+     * @return
+     * @param <T>
+     */
+    public <T> T to(final Class<?> clazz) {
+        if (!clazz.isInstance(this))
+            throw new IllegalArgumentException("Arena is not of type " + clazz.getSimpleName());
+
+        return (T) clazz.cast(this);
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (!(object instanceof Arena))
+            return false;
+
+        final Arena arena = (Arena) object;
+        return arena.getArenaName().equals(this.getArenaName());
     }
     
 }
