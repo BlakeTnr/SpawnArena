@@ -48,6 +48,12 @@ public final class SavableArena extends Arena {
         return super.setAllowPvp(value);
     }
 
+    @Override
+    public ArenaOptions setDeathOnTouchWater(final boolean value) {
+        this.save(config -> config.deathOnTouchWater = value);
+        return super.setDeathOnTouchWater(value);
+    }
+
     public File getConfigFile() {
         final File configFile = new File(ARENAS_DIR, this.configName);
         return configFile;
@@ -75,6 +81,7 @@ public final class SavableArena extends Arena {
         arena.setShouldClearItems(config.shouldClearItems);
         arena.setAllowDamage(config.allowDamage);
         arena.setAllowPvp(config.allowPvp);
+        arena.setDeathOnTouchWater(config.deathOnTouchWater);
 
         return arena;
     }

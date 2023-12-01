@@ -11,10 +11,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Fight {
-    // Todo: pull out some of the code from Arena into here
     FightState fightState = FightState.INITALIZING;
     private Arena arena;
-    // Todo: Create PlayerPreFightData class
     PlayerPreFightData preFightData1;
     PlayerPreFightData preFightData2;
     Player fighter1;

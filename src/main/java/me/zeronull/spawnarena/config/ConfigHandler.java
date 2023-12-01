@@ -85,6 +85,7 @@ public class ConfigHandler {
             arena.setShouldClearItems(config.shouldClearItems);
             arena.setAllowDamage(config.allowDamage);
             arena.setAllowPvp(config.allowPvp);
+            arena.setDeathOnTouchWater(config.deathOnTouchWater);
 
             arenas.add(arena);
         }

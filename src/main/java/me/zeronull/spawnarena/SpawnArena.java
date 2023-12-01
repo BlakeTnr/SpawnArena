@@ -12,7 +12,12 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpawnArena extends JavaPlugin {
+    public static SpawnArena INSTANCE;
     public static Arenas arenas;
+
+    public SpawnArena() {
+        INSTANCE = this;
+    }
 
     private void registerEvents() {
         if (Arena.ArenaUtils.WORLD_EDIT_SUPPORT)
@@ -28,6 +33,7 @@ public class SpawnArena extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new QueuePlayerLeave(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerLeaveSpawn(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerJoinEvent(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new LiquidListener(), this);
     }
 
     private void registerCommands() {

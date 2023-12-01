@@ -4,6 +4,7 @@ public abstract class ArenaOptions {
     private boolean shouldClearItems;
     private boolean allowDamage;
     private boolean allowPvp;
+    private boolean deathOnTouchWater;
 
     public boolean isShouldClearItems() {
         return this.shouldClearItems;
@@ -17,6 +18,8 @@ public abstract class ArenaOptions {
         return this.allowPvp;
     }
 
+    public boolean isDeathOnTouchWater() { return this.deathOnTouchWater; }
+
     public ArenaOptions setShouldClearItems(final boolean value) {
         this.shouldClearItems = value;
         return this;
@@ -29,6 +32,11 @@ public abstract class ArenaOptions {
 
     public ArenaOptions setAllowPvp(final boolean value) {
         this.allowPvp = value;
+        return this;
+    }
+
+    public ArenaOptions setDeathOnTouchWater(final boolean value) {
+        this.deathOnTouchWater = value;
         return this;
     }
 }

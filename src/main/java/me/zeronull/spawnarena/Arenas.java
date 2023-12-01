@@ -7,7 +7,10 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public final class Arenas implements Iterable<Arena> {
     public final class ArenasIterator implements Iterator<Arena> {
