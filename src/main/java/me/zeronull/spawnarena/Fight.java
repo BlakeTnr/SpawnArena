@@ -2,7 +2,10 @@ package me.zeronull.spawnarena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -135,6 +138,13 @@ public class Fight {
 
         if (this.arena.isShouldClearItems())
             this.performOnFighters(fighter -> fighter.getInventory().clear());
+
+        if (this.arena.isGiveKnockBackStick()) {
+            final ItemStack stick = new ItemStack(Material.STICK);
+            stick.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+
+            this.performOnFighters(fighter -> fighter.getInventory().addItem(stick));
+        }
         
         this.arena.teleportFighters(fighter1, fighter2);
         this.fightState = FightState.IN_FIGHT;

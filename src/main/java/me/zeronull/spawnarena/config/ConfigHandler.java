@@ -87,6 +87,7 @@ public class ConfigHandler {
             arena.setAllowPvp(config.allowPvp);
             arena.setDeathOnTouchLiquid(config.deathOnTouchLiquid);
             arena.setWinOnStepStonePressurePlate(config.winOnStepStonePressurePlate);
+            arena.setGiveKnockBackStick(config.giveKnockBackStick);
 
             arenas.add(arena);
         }

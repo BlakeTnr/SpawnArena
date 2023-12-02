@@ -29,4 +29,7 @@ public final class ArenaConfig {
 
     @Comment("Should a fighter win against their opponent if they stand on a stone pressure plate?")
     public boolean winOnStepStonePressurePlate;
+
+    @Comment("Should it give the fighters knockback stick when they are first teleported into the arena")
+    public boolean giveKnockBackStick;
 }

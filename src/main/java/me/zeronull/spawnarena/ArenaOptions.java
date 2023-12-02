@@ -6,6 +6,7 @@ public abstract class ArenaOptions {
     private boolean allowPvp;
     private boolean deathOnTouchLiquid;
     private boolean winOnStepStonePressurePlate;
+    private boolean giveKnockBackStick;
 
     public boolean isShouldClearItems() {
         return this.shouldClearItems;
@@ -22,6 +23,8 @@ public abstract class ArenaOptions {
     public boolean isDeathOnTouchLiquid() { return this.deathOnTouchLiquid; }
 
     public boolean isWinOnStepStonePressurePlate() { return this.winOnStepStonePressurePlate; }
+
+    public boolean isGiveKnockBackStick() { return this.giveKnockBackStick; }
 
     public ArenaOptions setShouldClearItems(final boolean value) {
         this.shouldClearItems = value;
@@ -45,6 +48,11 @@ public abstract class ArenaOptions {
 
     public ArenaOptions setWinOnStepStonePressurePlate(final boolean value) {
         this.winOnStepStonePressurePlate = value;
+        return this;
+    }
+
+    public ArenaOptions setGiveKnockBackStick(final boolean value) {
+        this.giveKnockBackStick = value;
         return this;
     }
 }

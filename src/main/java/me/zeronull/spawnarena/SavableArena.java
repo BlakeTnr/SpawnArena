@@ -60,6 +60,12 @@ public final class SavableArena extends Arena {
         return super.setWinOnStepStonePressurePlate(value);
     }
 
+    @Override
+    public ArenaOptions setGiveKnockBackStick(final boolean value) {
+        this.save(config -> config.giveKnockBackStick = value);
+        return super.setGiveKnockBackStick(value);
+    }
+
     public File getConfigFile() {
         final File configFile = new File(ARENAS_DIR, this.configName);
         return configFile;
@@ -89,6 +95,7 @@ public final class SavableArena extends Arena {
         arena.setAllowPvp(config.allowPvp);
         arena.setDeathOnTouchLiquid(config.deathOnTouchLiquid);
         arena.setWinOnStepStonePressurePlate(config.winOnStepStonePressurePlate);
+        arena.setGiveKnockBackStick(config.giveKnockBackStick);
 
         return arena;
     }
