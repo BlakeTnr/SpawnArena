@@ -1,5 +1,6 @@
 package me.zeronull.spawnarena;
 
+import me.zeronull.spawnarena.events.ArenaPlayerConsumeEvent;
 import me.zeronull.spawnarena.inventory.BukkitSerialization;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.UUID;
 
 public class PlayerPreFightData {
@@ -47,6 +49,8 @@ public class PlayerPreFightData {
     public void restore() {
         if (this.player == null || !this.player.isOnline())
             throw new IllegalStateException(String.format("Failed to restore PlayerPreFightData for %s because they were offline", this.username));
+
+        ArenaPlayerConsumeEvent.PLAYER_FINISH_GAME_MAP.put(this.player.getUniqueId(), Instant.now().getEpochSecond());
 
         // These 2 just assume they were at this before
         this.player.setHealth(20);

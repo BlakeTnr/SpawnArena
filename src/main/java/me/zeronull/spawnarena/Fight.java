@@ -152,14 +152,16 @@ public class Fight {
 
     public void endFight() {
         this.fightState = FightState.ENDING;
+
         this.preFightData1.restore();
         this.preFightData2.restore();
+
         this.fightState = FightState.OVER;
         this.arena.clearFight();
 //        this.arena.arenaState = ArenaState.EMPTY;
 
-        this.arena.queue.tryStartFight();
         this.arena.arenaState = ArenaState.EMPTY;
+        this.arena.queue.tryStartFight();
     }
 
     public void announceWinner(Player whoDied) {
