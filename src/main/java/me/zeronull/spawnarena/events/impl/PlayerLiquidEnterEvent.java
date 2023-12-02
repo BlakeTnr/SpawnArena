@@ -4,10 +4,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-public final class PlayerLiquidWaterEvent extends PlayerEvent {
+public final class PlayerLiquidEnterEvent extends PlayerEvent {
     private static final HandlerList handlers = new HandlerList();
 
-    public PlayerLiquidWaterEvent(Player who) {
+    public PlayerLiquidEnterEvent(Player who) {
         super(who);
     }
 

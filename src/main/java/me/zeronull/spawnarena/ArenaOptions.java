@@ -4,7 +4,8 @@ public abstract class ArenaOptions {
     private boolean shouldClearItems;
     private boolean allowDamage;
     private boolean allowPvp;
-    private boolean deathOnTouchWater;
+    private boolean deathOnTouchLiquid;
+    private boolean winOnStepStonePressurePlate;
 
     public boolean isShouldClearItems() {
         return this.shouldClearItems;
@@ -18,7 +19,9 @@ public abstract class ArenaOptions {
         return this.allowPvp;
     }
 
-    public boolean isDeathOnTouchWater() { return this.deathOnTouchWater; }
+    public boolean isDeathOnTouchLiquid() { return this.deathOnTouchLiquid; }
+
+    public boolean isWinOnStepStonePressurePlate() { return this.winOnStepStonePressurePlate; }
 
     public ArenaOptions setShouldClearItems(final boolean value) {
         this.shouldClearItems = value;
@@ -35,8 +38,13 @@ public abstract class ArenaOptions {
         return this;
     }
 
-    public ArenaOptions setDeathOnTouchWater(final boolean value) {
-        this.deathOnTouchWater = value;
+    public ArenaOptions setDeathOnTouchLiquid(final boolean value) {
+        this.deathOnTouchLiquid = value;
+        return this;
+    }
+
+    public ArenaOptions setWinOnStepStonePressurePlate(final boolean value) {
+        this.winOnStepStonePressurePlate = value;
         return this;
     }
 }

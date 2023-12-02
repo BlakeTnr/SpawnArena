@@ -114,7 +114,7 @@ public class Fight {
         return Arrays.asList(this.fighter1, this.fighter2);
     }
 
-    private Player getOtherFighter(final Player fighter) {
+    public Player getOtherFighter(final Player fighter) {
         for (final Player p : this.getFighters()) {
             if (p.equals(fighter))
                 continue;

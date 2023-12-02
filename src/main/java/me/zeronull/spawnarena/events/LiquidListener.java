@@ -4,7 +4,7 @@ import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
-import me.zeronull.spawnarena.events.impl.PlayerLiquidWaterEvent;
+import me.zeronull.spawnarena.events.impl.PlayerLiquidEnterEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,19 +20,19 @@ public final class LiquidListener implements Listener, Runnable {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerMove(final PlayerMoveEvent e) {
         if (e.getPlayer().getLocation().getBlock().isLiquid())
-            SpawnArena.INSTANCE.getServer().getPluginManager().callEvent(new PlayerLiquidWaterEvent(e.getPlayer()));
+            SpawnArena.INSTANCE.getServer().getPluginManager().callEvent(new PlayerLiquidEnterEvent(e.getPlayer()));
     }
 
     @Override
     public void run() {
         for (final Player p : SpawnArena.INSTANCE.getServer().getOnlinePlayers()) {
             if (p.getLocation().getBlock().isLiquid())
-                SpawnArena.INSTANCE.getServer().getPluginManager().callEvent(new PlayerLiquidWaterEvent(p));
+                SpawnArena.INSTANCE.getServer().getPluginManager().callEvent(new PlayerLiquidEnterEvent(p));
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerEnterWater(final PlayerLiquidWaterEvent e) {
+    public void onPlayerEnterLiquid(final PlayerLiquidEnterEvent e) {
         final Player player = e.getPlayer();
 
         if(!SpawnArena.arenas.hasActiveFight()) {
@@ -54,7 +54,7 @@ public final class LiquidListener implements Listener, Runnable {
             return;
         }
 
-        if (!arena.isDeathOnTouchWater()) {
+        if (!arena.isDeathOnTouchLiquid()) {
             return;
         }
 

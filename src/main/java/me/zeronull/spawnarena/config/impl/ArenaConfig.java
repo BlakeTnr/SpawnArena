@@ -24,6 +24,9 @@ public final class ArenaConfig {
     @Comment("Should fighters be able to pvp each other?")
     public boolean allowPvp = true;
 
-    @Comment("Should a fighter die if they touch water?")
-    public boolean deathOnTouchWater;
+    @Comment("Should a fighter die if they touch liquid?")
+    public boolean deathOnTouchLiquid;
+
+    @Comment("Should a fighter win against their opponent if they stand on a stone pressure plate?")
+    public boolean winOnStepStonePressurePlate;
 }

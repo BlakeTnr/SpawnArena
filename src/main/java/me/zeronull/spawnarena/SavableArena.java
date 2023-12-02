@@ -49,9 +49,15 @@ public final class SavableArena extends Arena {
     }
 
     @Override
-    public ArenaOptions setDeathOnTouchWater(final boolean value) {
-        this.save(config -> config.deathOnTouchWater = value);
-        return super.setDeathOnTouchWater(value);
+    public ArenaOptions setDeathOnTouchLiquid(final boolean value) {
+        this.save(config -> config.deathOnTouchLiquid = value);
+        return super.setDeathOnTouchLiquid(value);
+    }
+
+    @Override
+    public ArenaOptions setWinOnStepStonePressurePlate(final boolean value) {
+        this.save(config -> config.winOnStepStonePressurePlate = value);
+        return super.setWinOnStepStonePressurePlate(value);
     }
 
     public File getConfigFile() {
@@ -81,7 +87,8 @@ public final class SavableArena extends Arena {
         arena.setShouldClearItems(config.shouldClearItems);
         arena.setAllowDamage(config.allowDamage);
         arena.setAllowPvp(config.allowPvp);
-        arena.setDeathOnTouchWater(config.deathOnTouchWater);
+        arena.setDeathOnTouchLiquid(config.deathOnTouchLiquid);
+        arena.setWinOnStepStonePressurePlate(config.winOnStepStonePressurePlate);
 
         return arena;
     }
