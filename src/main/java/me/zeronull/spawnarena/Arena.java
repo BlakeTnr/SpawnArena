@@ -5,6 +5,7 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 
@@ -122,8 +123,19 @@ public abstract class Arena extends ArenaOptions {
     }
 
     public void teleportFighters(Player fighter1, Player fighter2) {
+        this.dismount(fighter1);
         fighter1.teleport(this.spawnPoint1);
+        this.dismount(fighter2);
         fighter2.teleport(this.spawnPoint2);
+    }
+
+    private void dismount(final Player player) {
+        final Entity vehicle = player.getVehicle();
+
+        if (vehicle == null)
+            return;
+
+        vehicle.eject();
     }
 
     public void setQueue(ArenaQueue queue) {

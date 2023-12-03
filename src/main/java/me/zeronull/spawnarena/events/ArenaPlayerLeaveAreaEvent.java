@@ -31,6 +31,10 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
             return;
         }
 
+        final Arena to = SpawnArena.arenas.of(event.getTo());
+        if (to != null && to.equals(arena))
+            return;
+
         if(event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.UNKNOWN) {
             fight.announceWinner(player);
             fight.endFight();
