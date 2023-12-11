@@ -26,15 +26,6 @@ public class JoinArenaQueueCommand extends ArenaTabComplete implements CommandEx
             return true;
         }
 
-//        if(!sender.hasPermission("spawnarena.joinarenaqueue")) {
-//            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou don't have permission!"));
-//            return true;
-//        }
-
-        // If extending in future, add arg for which arena
-        // ALSO CHECK IF ARENA IS SETUP BEFORE PUTTING YOU MFS IN A GAME
-        // ALSO CHECK IF PLAYER IS ALREADY IN A QUEUE
-
         final String arenaName = args[0];
         final Arena arena = SpawnArena.arenas.of(arenaName);
 

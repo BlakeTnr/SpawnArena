@@ -19,6 +19,13 @@ public class SpawnArena extends JavaPlugin {
         INSTANCE = this;
     }
 
+    public void onEnable() {
+        registerEvents();
+        registerCommands();
+
+        arenas = Arenas.fromList(ConfigHandler.getInstance().registerArenasFromConfig());
+    }
+
     private void registerEvents() {
         if (Arena.ArenaUtils.WORLD_EDIT_SUPPORT)
             Bukkit.getServer().getPluginManager().registerEvents(new ArenaWorldguardPvPEvent(), this);
@@ -53,26 +60,15 @@ public class SpawnArena extends JavaPlugin {
             command.setTabCompleter((TabCompleter) cmd);
     }
 
-    public void onEnable() {
-        registerEvents();
-        registerCommands();
-//        new ArenaCombatTagEvent().registerEvent();
-
-        arenas = Arenas.fromList(ConfigHandler.getInstance().registerArenasFromConfig());
-    }
-
     public void onDisable() {
         this.shutdownArenas();
     }
 
     private void shutdownArenas() {
-//        System.out.println(String.format("Null or empty: %s", arenas == null || arenas.isEmpty()));
-
         if (arenas == null || arenas.isEmpty())
             return;
 
         for (final Arena arena : arenas) {
-//            System.out.println(String.format("null: %s", arena == null));
             arena.getFight().ifPresent(fight -> {
                 if (fight.getState() == FightState.IN_FIGHT)
                     fight.endFight();

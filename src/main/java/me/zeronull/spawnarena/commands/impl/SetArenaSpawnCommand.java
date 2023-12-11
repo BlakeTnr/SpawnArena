@@ -22,13 +22,6 @@ public class SetArenaSpawnCommand extends ArenaTabComplete implements CommandExe
             sender.sendMessage("You must be a player to run this command!");
             return true;
         }
-
-//        if(!sender.hasPermission("spawnarena.setarenaspawn")) {
-//            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou don't have permission!"));
-//            return true;
-//        }
-
-        // If extending in future, add arg for which arena
         
         if(args.length < 2) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cUsage: /setarenaspawn (1/2) <arena>"));
