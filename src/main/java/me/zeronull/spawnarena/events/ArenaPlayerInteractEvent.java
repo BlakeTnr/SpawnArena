@@ -4,10 +4,14 @@ import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
+import org.bukkit.Material;
+import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.InventoryHolder;
 
 public final class ArenaPlayerInteractEvent implements Listener {
     @EventHandler
@@ -29,6 +33,11 @@ public final class ArenaPlayerInteractEvent implements Listener {
         }
 
         if(fight.getState() == FightState.INITALIZING) {
+            return;
+        }
+
+        if (e.getAction() == Action.RIGHT_CLICK_BLOCK && (e.getClickedBlock().getState() instanceof InventoryHolder || e.getClickedBlock().getType() == Material.ENDER_CHEST)) {
+            e.setCancelled(true);
             return;
         }
 
