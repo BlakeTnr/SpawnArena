@@ -48,15 +48,14 @@ public final class CreateArenaCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.GREEN + String.format("Created arena '%s'!", arena.getArenaName()));
             return true;
         } catch(SenderNotPlayerException e) {
-            sender.sendMessage("You must be a player to run this command!");
+            sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
             return true;
         } 
     }
 
     public void validateSenderIsPlayer(CommandSender sender) throws SenderNotPlayerException {
-        if(!(sender instanceof Player)) {
+        if(sender instanceof Player)
             return;
-        }
 
         throw new SenderNotPlayerException("Sender not player");
     }
