@@ -11,7 +11,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.CraftingInventory;
 
 public class ArenaPreventCraftingSlot implements Listener {
-
     @EventHandler
     public void onClickInventory(final InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();

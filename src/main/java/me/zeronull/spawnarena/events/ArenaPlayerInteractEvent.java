@@ -5,7 +5,6 @@ import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.Material;
-import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

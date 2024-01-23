@@ -43,6 +43,7 @@ public class SpawnArena extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new LiquidListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerInteractEvent(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerConsumeEvent(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ArenaTridentDupeFix(), this);
     }
 
     private void registerCommands() {
