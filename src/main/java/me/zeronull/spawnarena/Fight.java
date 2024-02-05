@@ -1,5 +1,8 @@
 package me.zeronull.spawnarena;
 
+import club.hellin.core.bungee.database.models.impl.PlayerState;
+import club.hellin.core.bungee.database.models.impl.objects.ArenaStats;
+import club.hellin.core.spigot.SpigotCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -165,16 +168,76 @@ public class Fight {
     }
 
     public void announceWinner(Player whoDied) {
+        Player winner;
         String winnerName;
+
+        Player loser;
         String loserName;
+
         if(fighter1.equals(whoDied)) {
+            winner = fighter2;
             winnerName = fighter2.getDisplayName();
+
+            loser = fighter1;
             loserName = fighter1.getDisplayName();
         } else {
+            winner = fighter1;
             winnerName = fighter1.getDisplayName();
+
+            loser = fighter2;
             loserName = fighter2.getDisplayName();
         }
 
+        this.handleDeath(loser);
+        this.handleVictory(winner);
+
         Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&4" + winnerName + "&4 beat " + loserName + "&4 in the arena!"));
+    }
+
+    private void handleDeath(final Player loser) {
+        ArenaStats.Values value = this.getValue(this.arena.arenaName, true);
+        PlayerState state = SpigotCore.INSTANCE.getWs().getPlayerStateMap().get(loser.getUniqueId());
+
+        if (state != null && value != null) {
+            final ArenaStats stats = state.getArenaStats();
+
+            stats.setInt(value, 0);
+            SpigotCore.INSTANCE.getWs().updatePlayerState(state);
+        }
+    }
+
+    private void handleVictory(final Player winner) {
+        ArenaStats.Values winStreakValue = this.getValue(this.arena.arenaName, true);
+        ArenaStats.Values winsValue = this.getValue(this.arena.arenaName, false);
+
+        PlayerState state = SpigotCore.INSTANCE.getWs().getPlayerStateMap().get(winner.getUniqueId());
+
+        if (state != null && winStreakValue != null && winsValue != null) {
+            final ArenaStats stats = state.getArenaStats();
+
+            stats.setInt(winStreakValue, stats.getInt(winStreakValue) + 1);
+            stats.setInt(winsValue, stats.getInt(winsValue) + 1);
+            SpigotCore.INSTANCE.getWs().updatePlayerState(state);
+        }
+    }
+
+    private ArenaStats.Values getValue(final String arenaName, final boolean streak) {
+        if (streak) {
+            switch (arenaName.toLowerCase()) {
+                case "arena":
+                    return ArenaStats.Values.ARENA_WIN_STREAK;
+                case "sumo":
+                    return ArenaStats.Values.SUMO_WIN_STREAK;
+            }
+        } else {
+            switch (arenaName.toLowerCase()) {
+                case "arena":
+                    return ArenaStats.Values.ARENA_WINS;
+                case "sumo":
+                    return ArenaStats.Values.SUMO_WINS;
+            }
+        }
+
+        return null;
     }
 }

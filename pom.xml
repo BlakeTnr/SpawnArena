@@ -73,6 +73,13 @@
       <artifactId>json</artifactId>
       <version>20230618</version>
     </dependency>
+    <dependency>
+      <systemPath>C:/Users/josep/Desktop/Minigames/All/Core/build/libs/Core-1.0-SNAPSHOT-all.jar</systemPath>
+      <scope>system</scope>
+      <groupId>club.hellin.core</groupId>
+      <artifactId>Core</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
 <!--    <dependency>-->
 <!--      <artifactId>EventControl</artifactId>-->
 <!--      <groupId>club.hellin</groupId>-->
