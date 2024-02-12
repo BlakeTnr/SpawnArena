@@ -135,6 +135,7 @@ public class Fight {
     public void startFight() {
         Arena.ArenaUtils.kickOutLingeringPlayers();
 
+        this.performOnFighters(fighter -> fighter.closeInventory());
         this.performOnFighters(fighter -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "invsave " + fighter.getName()));
 
         preFightData1 = new PlayerPreFightData(fighter1);
