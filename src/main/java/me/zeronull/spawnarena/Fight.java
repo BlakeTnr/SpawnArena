@@ -5,6 +5,7 @@ import club.hellin.core.bungee.database.models.impl.objects.ArenaStats;
 import club.hellin.core.spigot.SpigotCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -138,6 +139,8 @@ public class Fight {
 
         preFightData1 = new PlayerPreFightData(fighter1);
         preFightData2 = new PlayerPreFightData(fighter2);
+
+        this.performOnFighters(fighter -> fighter.setGameMode(GameMode.SURVIVAL));
 
         if (this.arena.isShouldClearItems())
             this.performOnFighters(fighter -> fighter.getInventory().clear());

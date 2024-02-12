@@ -3,6 +3,7 @@ package me.zeronull.spawnarena;
 import me.zeronull.spawnarena.events.ArenaPlayerConsumeEvent;
 import me.zeronull.spawnarena.inventory.BukkitSerialization;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +21,7 @@ public class PlayerPreFightData {
     int level;
     float exp;
     Location previousLocation;
+    GameMode previousGameMode;
 
     public PlayerPreFightData(Player player) {
         this.player = player;
@@ -29,6 +31,7 @@ public class PlayerPreFightData {
         level = player.getLevel();
         exp = player.getExp();
         previousLocation = player.getLocation();
+        previousGameMode = player.getGameMode();
     }
 
     /**
@@ -62,6 +65,7 @@ public class PlayerPreFightData {
         this.player.setExp(this.exp);
         this.player.getInventory().setContents(this.contents);
         this.player.getInventory().setArmorContents(this.armorContents);
+        this.player.setGameMode(this.previousGameMode);
     }
 
     private ItemStack[] cloneItemStackArray(ItemStack[] items) {
