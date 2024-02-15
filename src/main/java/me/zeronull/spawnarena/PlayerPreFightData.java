@@ -22,6 +22,7 @@ public class PlayerPreFightData {
     float exp;
     Location previousLocation;
     GameMode previousGameMode;
+    private double health;
 
     public PlayerPreFightData(Player player) {
         this.player = player;
@@ -32,6 +33,7 @@ public class PlayerPreFightData {
         exp = player.getExp();
         previousLocation = player.getLocation();
         previousGameMode = player.getGameMode();
+        health = player.getHealth();
     }
 
     /**
@@ -47,6 +49,8 @@ public class PlayerPreFightData {
         this.level = obj.getInt("level");
         this.exp = obj.getFloat("exp");
         this.previousLocation = BukkitSerialization.locationFromJson(new JSONObject(obj.getString("previous_location")));
+        this.previousGameMode = GameMode.valueOf(obj.getString("previous_gamemode"));
+        this.health = obj.getDouble("health");
     }
 
     public void restore() {
@@ -55,12 +59,13 @@ public class PlayerPreFightData {
 
         ArenaPlayerConsumeEvent.PLAYER_FINISH_GAME_MAP.put(this.player.getUniqueId(), Instant.now().getEpochSecond());
 
-        // These 2 just assume they were at this before
-        this.player.setHealth(20);
-        this.player.setFireTicks(0);
-
         this.player.closeInventory();
         this.player.teleport(this.previousLocation);
+
+        // These 2 just assume they were at this before
+        this.player.setFireTicks(0);
+
+        this.player.setHealth(this.health);
         this.player.setLevel(this.level);
         this.player.setExp(this.exp);
         this.player.getInventory().setContents(this.contents);
@@ -90,6 +95,8 @@ public class PlayerPreFightData {
         obj.put("level", this.level);
         obj.put("exp", this.exp);
         obj.put("previous_location", BukkitSerialization.locationToJson(this.previousLocation));
+        obj.put("previous_gamemode", this.previousGameMode.name());
+        obj.put("health", this.health);
 
         return obj;
     }

@@ -142,6 +142,7 @@ public class Fight {
         preFightData2 = new PlayerPreFightData(fighter2);
 
         this.performOnFighters(fighter -> fighter.setGameMode(GameMode.SURVIVAL));
+        this.performOnFighters(fighter -> fighter.setHealth(fighter.getMaxHealth()));
 
         if (this.arena.isShouldClearItems())
             this.performOnFighters(fighter -> fighter.getInventory().clear());
