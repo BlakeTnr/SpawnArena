@@ -196,7 +196,7 @@ public class Fight {
         this.handleDeath(loser);
         this.handleVictory(winner);
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&4" + winnerName + "&4 beat " + loserName + "&4 in the arena!"));
+        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&4" + winnerName + "&4 beat " + loserName + String.format("&4 in the %sarena!", "arena".equals(this.arena.getArenaName()) ? "" : this.arena.getArenaName() + " ")));
     }
 
     private void handleDeath(final Player loser) {
