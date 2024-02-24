@@ -7,10 +7,13 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerPreFightData {
@@ -22,7 +25,8 @@ public class PlayerPreFightData {
     float exp;
     Location previousLocation;
     GameMode previousGameMode;
-    private double health;
+    double health;
+    List<PotionEffect> effects;
 
     public PlayerPreFightData(Player player) {
         this.player = player;
@@ -34,6 +38,7 @@ public class PlayerPreFightData {
         previousLocation = player.getLocation();
         previousGameMode = player.getGameMode();
         health = player.getHealth();
+        effects = new ArrayList<>(player.getActivePotionEffects());
     }
 
     /**
@@ -71,6 +76,19 @@ public class PlayerPreFightData {
         this.player.getInventory().setContents(this.contents);
         this.player.getInventory().setArmorContents(this.armorContents);
         this.player.setGameMode(this.previousGameMode);
+
+        this.restorePotionEffects();
+    }
+
+    private void restorePotionEffects() {
+        if (this.effects == null || this.effects.isEmpty())
+            return;
+
+        for (final PotionEffect effect : this.player.getActivePotionEffects())
+            this.player.removePotionEffect(effect.getType());
+
+        for (final PotionEffect effect : this.effects)
+            this.player.addPotionEffect(effect);
     }
 
     private ItemStack[] cloneItemStackArray(ItemStack[] items) {
