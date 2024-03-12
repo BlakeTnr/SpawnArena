@@ -1,6 +1,7 @@
 package me.zeronull.spawnarena.events;
 
 import me.zeronull.spawnarena.Arena;
+import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.entity.*;
@@ -15,18 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public final class ArenaTridentDupeFix implements Listener {
-    private final List<AbstractArrow> thrownTridents = new ArrayList<>();
+public final class ArenaProjectileDupeFix implements Listener {
+    private final List<Projectile> thrownProjectiles = new ArrayList<>();
 
     @EventHandler
     public void onProjectileLaunch(final ProjectileLaunchEvent e) {
         final Entity entity = e.getEntity();
 
-        if (entity.getType() != EntityType.TRIDENT)
+        if (entity.getType() != EntityType.TRIDENT && !entity.getType().name().contains("ARROW"))
             return;
 
-        final Trident trident = (Trident) entity;
-        final ProjectileSource shooterEntity = trident.getShooter();
+        final Projectile projectile = (Projectile) entity;
+        final ProjectileSource shooterEntity = projectile.getShooter();
 
         if (shooterEntity == null)
             return;
@@ -48,19 +49,33 @@ public final class ArenaTridentDupeFix implements Listener {
         if (!SpawnArena.arenas.hasFighter(shooter))
             return;
 
-        if (!this.thrownTridents.contains(trident))
-            this.thrownTridents.add(trident);
+        if (!this.thrownProjectiles.contains(projectile))
+            this.thrownProjectiles.add(projectile);
     }
 
     @EventHandler
     public void onPlayerPickupArrow(final PlayerPickupArrowEvent e) {
         final AbstractArrow arrow = e.getArrow();
 
-        if (!this.thrownTridents.contains(arrow))
+        if (!this.thrownProjectiles.contains(arrow))
             return;
 
         final Player p = e.getPlayer();
         final UUID uuid = p.getUniqueId();
+
+        final ProjectileSource source = arrow.getShooter();
+
+        if (source instanceof Player) {
+            final Player shooter = (Player) source;
+            final Arena arena = SpawnArena.arenas.of(shooter);
+
+            if (arena != null && arena.getFight().isPresent()) {
+                final Fight fight = arena.getFight().orElse(null);
+
+                if (fight.getState() == FightState.IN_FIGHT && !fight.isFighter(p))
+                    e.setCancelled(true);
+            }
+        }
 
         final long now = Instant.now().getEpochSecond();
         final long then = ArenaPlayerConsumeEvent.PLAYER_FINISH_GAME_MAP.getOrDefault(uuid, 0L);

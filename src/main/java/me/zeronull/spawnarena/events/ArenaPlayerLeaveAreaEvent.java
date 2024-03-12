@@ -4,9 +4,11 @@ import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
@@ -39,6 +41,35 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
             fight.announceWinner(player);
             fight.endFight();
         }
+    }
+
+    @EventHandler
+    public void onEntityDamage(final EntityDamageEvent e) {
+        if (e.getEntity().getType() != EntityType.PLAYER)
+            return;
+
+        final Player p = (Player) e.getEntity();
+
+        if (e.getCause() != EntityDamageEvent.DamageCause.SUFFOCATION)
+            return;
+
+        if(!SpawnArena.arenas.hasActiveFight())
+            return;
+
+        if(!SpawnArena.arenas.hasFighter(p))
+            return;
+
+        final Arena arena = SpawnArena.arenas.of(p);
+        final Fight fight = arena.getFight().get();
+
+        if(fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING)
+            return;
+
+        final Arena to = SpawnArena.arenas.of(p.getLocation());
+        if (to != null && to.equals(arena))
+            return;
+
+        fight.teleportToSpawn(p);
     }
     
 }

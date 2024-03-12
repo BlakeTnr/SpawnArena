@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class Fight {
@@ -156,6 +157,15 @@ public class Fight {
         
         this.arena.teleportFighters(fighter1, fighter2);
         this.fightState = FightState.IN_FIGHT;
+    }
+
+    public void teleportToSpawn(final Player fighter) {
+        final UUID uuid = fighter.getUniqueId();
+
+        if (this.fighter1 != null && this.fighter1.getUniqueId().equals(uuid))
+            fighter.teleport(this.arena.spawnPoint1);
+        else if (this.fighter2 != null && this.fighter2.getUniqueId().equals(uuid))
+            fighter.teleport(this.arena.spawnPoint2);
     }
 
     public void endFight() {

@@ -89,8 +89,8 @@ public abstract class Arena extends ArenaOptions {
     public ArenaQueue queue;
     protected ArenaState arenaState = ArenaState.EMPTY;
     protected String arenaName;
-    private Location spawnPoint1;
-    private Location spawnPoint2;
+    protected Location spawnPoint1;
+    protected Location spawnPoint2;
     private Fight fight;
 
     public Arena(String arenaName) {
