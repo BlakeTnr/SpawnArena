@@ -4,6 +4,7 @@ import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,6 +31,12 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
         final Fight fight = arena.getFight().get();
 
         if(fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING) {
+            return;
+        }
+
+        final Material type = event.getTo().clone().add(0, 0.5, 0).getBlock().getType();
+        if (event.getCause() == TeleportCause.ENDER_PEARL && type.isSolid()) {
+            event.setCancelled(true);
             return;
         }
 

@@ -1,8 +1,8 @@
 package me.zeronull.spawnarena;
 
-import club.hellin.core.bungee.database.models.impl.PlayerState;
-import club.hellin.core.bungee.database.models.impl.objects.ArenaStats;
-import club.hellin.core.spigot.SpigotCore;
+import club.hellin.vivillyapi.SpigotCoreBase;
+import club.hellin.vivillyapi.models.impl.PlayerStateBase;
+import club.hellin.vivillyapi.models.impl.objects.ArenaStatsBase;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -210,47 +210,76 @@ public class Fight {
     }
 
     private void handleDeath(final Player loser) {
-        ArenaStats.Values value = this.getValue(this.arena.arenaName, true);
-        PlayerState state = SpigotCore.INSTANCE.getWs().getPlayerStateMap().get(loser.getUniqueId());
+        ArenaStatsBase.Values winStreakValue = this.getValue(this.arena.arenaName, ValueType.STREAK);
+        PlayerStateBase state = SpigotCoreBase.INSTANCE.getWs().getPlayerStateMap().get(loser.getUniqueId());
 
-        if (state != null && value != null) {
-            final ArenaStats stats = state.getArenaStats();
+        if (state != null && winStreakValue != null) {
+            final ArenaStatsBase stats = state.getArenaStats();
 
-            stats.setInt(value, 0);
-            SpigotCore.INSTANCE.getWs().updatePlayerState(state);
+            stats.setInt(winStreakValue, 0);
+            SpigotCoreBase.INSTANCE.getWs().updatePlayerState(state);
         }
     }
 
     private void handleVictory(final Player winner) {
-        ArenaStats.Values winStreakValue = this.getValue(this.arena.arenaName, true);
-        ArenaStats.Values winsValue = this.getValue(this.arena.arenaName, false);
+        ArenaStatsBase.Values winStreakValue = this.getValue(this.arena.arenaName, ValueType.STREAK);
+        ArenaStatsBase.Values winsValue = this.getValue(this.arena.arenaName, ValueType.WINS);
+        ArenaStatsBase.Values bestWinStreakValue = this.getValue(this.arena.arenaName, ValueType.BEST_STREAK);
 
-        PlayerState state = SpigotCore.INSTANCE.getWs().getPlayerStateMap().get(winner.getUniqueId());
+        PlayerStateBase state = SpigotCoreBase.INSTANCE.getWs().getPlayerStateMap().get(winner.getUniqueId());
 
-        if (state != null && winStreakValue != null && winsValue != null) {
-            final ArenaStats stats = state.getArenaStats();
+        if (state != null && winStreakValue != null && winsValue != null && bestWinStreakValue != null) {
+            final ArenaStatsBase stats = state.getArenaStats();
 
-            stats.setInt(winStreakValue, stats.getInt(winStreakValue) + 1);
+            final int newWinStreak = stats.getInt(winStreakValue) + 1;
+
+            stats.setInt(winStreakValue, newWinStreak);
             stats.setInt(winsValue, stats.getInt(winsValue) + 1);
-            SpigotCore.INSTANCE.getWs().updatePlayerState(state);
+
+            if (newWinStreak > stats.getInt(bestWinStreakValue))
+                stats.setInt(bestWinStreakValue, newWinStreak);
+
+            SpigotCoreBase.INSTANCE.getWs().updatePlayerState(state);
         }
     }
 
-    private ArenaStats.Values getValue(final String arenaName, final boolean streak) {
-        if (streak) {
-            switch (arenaName.toLowerCase()) {
-                case "arena":
-                    return ArenaStats.Values.ARENA_WIN_STREAK;
-                case "sumo":
-                    return ArenaStats.Values.SUMO_WIN_STREAK;
+    public enum ValueType {
+        WINS,
+        STREAK,
+        BEST_STREAK;
+    }
+
+    private ArenaStatsBase.Values getValue(final String arenaName, final ValueType type) {
+        switch (type) {
+            case WINS: {
+                switch (arenaName.toLowerCase()) {
+                    case "arena":
+                        return ArenaStatsBase.Values.ARENA_WINS;
+                    case "sumo":
+                        return ArenaStatsBase.Values.SUMO_WINS;
+                }
+                break;
             }
-        } else {
-            switch (arenaName.toLowerCase()) {
-                case "arena":
-                    return ArenaStats.Values.ARENA_WINS;
-                case "sumo":
-                    return ArenaStats.Values.SUMO_WINS;
+
+            case STREAK: {
+                switch (arenaName.toLowerCase()) {
+                    case "arena":
+                        return ArenaStatsBase.Values.ARENA_WIN_STREAK;
+                    case "sumo":
+                        return ArenaStatsBase.Values.SUMO_WIN_STREAK;
+                }
+                break;
             }
+
+//            case BEST_STREAK: {
+//                switch (arenaName.toLowerCase()) {
+//                    case "arena":
+//                        return ArenaStatsBase.Values.BEST_ARENA_WIN_STREAK;
+//                    case "sumo":
+//                        return ArenaStatsBase.Values.BEST_SUMO_WIN_STREAK;
+//                }
+//                break;
+//            }
         }
 
         return null;
