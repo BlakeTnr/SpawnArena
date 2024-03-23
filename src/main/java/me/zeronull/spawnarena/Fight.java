@@ -14,6 +14,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -146,6 +147,7 @@ public class Fight {
     public void startFight() {
         Arena.ArenaUtils.kickOutLingeringPlayers();
 
+        this.performOnFighters(fighter -> this.leaveParkour(fighter));
         this.performOnFighters(fighter -> fighter.closeInventory());
         this.performOnFighters(fighter -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "invsave " + fighter.getName()));
 
@@ -169,6 +171,32 @@ public class Fight {
         this.performHideLogic();
 
         this.fightState = FightState.IN_FIGHT;
+    }
+
+    private void leaveParkour(final Player player) {
+        try {
+            final Class<?> clazz = Class.forName("io.github.a5h73y.parkour.Parkour");
+            final Method instanceMethod = clazz.getDeclaredMethod("getInstance");
+            final Object main = instanceMethod.invoke(null);
+
+            final Method playerManagerMethod = clazz.getDeclaredMethod("getPlayerManager");
+            final Object playerManager = playerManagerMethod.invoke(main);
+
+            final Method parkourSessionManagerMethod = clazz.getDeclaredMethod("getParkourSessionManager");
+            final Object parkourSessionManager = parkourSessionManagerMethod.invoke(main);
+
+            final Class<?> parkourSessionManagerClass = parkourSessionManager.getClass();
+            final Method isPlayingMethod = parkourSessionManagerClass.getDeclaredMethod("isPlayingParkourCourse", Player.class);
+            final boolean isPlaying = (boolean) isPlayingMethod.invoke(parkourSessionManager, player);
+
+            if (isPlaying) {
+                final Class<?> playerManagerClass = playerManager.getClass();
+                final Method leaveCourseMethod = playerManagerClass.getDeclaredMethod("leaveCourse", Player.class);
+                leaveCourseMethod.invoke(playerManager, player);
+            }
+        } catch (final Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     private void performHideLogic() {

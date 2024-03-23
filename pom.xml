@@ -90,6 +90,12 @@
       <scope>provided</scope>
     </dependency>
 <!--    <dependency>-->
+<!--      <groupId>com.github.A5H73Y</groupId>-->
+<!--      <artifactId>Parkour</artifactId>-->
+<!--      <version>v7.0.5</version>-->
+<!--      <scope>provided</scope>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
 <!--      <systemPath>C:/Users/josep/Desktop/Minigames/All/Core/build/libs/Core-1.0-SNAPSHOT-all.jar</systemPath>-->
 <!--      <scope>system</scope>-->
 <!--      <groupId>club.hellin.core</groupId>-->
