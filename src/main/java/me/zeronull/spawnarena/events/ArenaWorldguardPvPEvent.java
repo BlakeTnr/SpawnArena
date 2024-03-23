@@ -30,7 +30,7 @@ public class ArenaWorldguardPvPEvent implements Listener {
 
         final Arena arena = SpawnArena.arenas.of(damager);
 
-        if (arena.getFight().get().getState() == FightState.INITALIZING)
+        if (arena.getFight(damager) != null && arena.getFight(damager).getState() == FightState.INITALIZING)
             return;
 
         if (!arena.equals(SpawnArena.arenas.of(damager.getLocation())))

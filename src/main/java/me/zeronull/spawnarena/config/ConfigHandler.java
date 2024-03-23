@@ -88,6 +88,7 @@ public class ConfigHandler {
             arena.setDeathOnTouchLiquid(config.deathOnTouchLiquid);
             arena.setWinOnStepStonePressurePlate(config.winOnStepStonePressurePlate);
             arena.setGiveKnockBackStick(config.giveKnockBackStick);
+            arena.setArenaMode(config.arenaMode);
 
             arenas.add(arena);
         }

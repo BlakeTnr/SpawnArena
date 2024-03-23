@@ -3,6 +3,7 @@ package me.zeronull.spawnarena;
 import me.zeronull.spawnarena.commands.impl.CreateArenaCommand;
 import me.zeronull.spawnarena.commands.impl.JoinArenaQueueCommand;
 import me.zeronull.spawnarena.commands.impl.SetArenaSpawnCommand;
+import me.zeronull.spawnarena.commands.impl.ToggleArenaModeCommand;
 import me.zeronull.spawnarena.config.ConfigHandler;
 import me.zeronull.spawnarena.events.*;
 import org.bukkit.Bukkit;
@@ -10,6 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
 
 public class SpawnArena extends JavaPlugin {
     public static SpawnArena INSTANCE;
@@ -50,6 +53,7 @@ public class SpawnArena extends JavaPlugin {
         this.registerCommand("joinarenaqueue", new JoinArenaQueueCommand());
         this.registerCommand("setarenaspawn", new SetArenaSpawnCommand());
         this.registerCommand("createarena", new CreateArenaCommand());
+        this.registerCommand("togglearenamode", new ToggleArenaModeCommand());
     }
 
     private void registerCommand(final String cmdName, final CommandExecutor cmd) {
@@ -70,7 +74,7 @@ public class SpawnArena extends JavaPlugin {
             return;
 
         for (final Arena arena : arenas) {
-            arena.getFight().ifPresent(fight -> {
+            new ArrayList<>(arena.getFights()).forEach(fight -> {
                 if (fight.getState() == FightState.IN_FIGHT)
                     fight.endFight();
             });

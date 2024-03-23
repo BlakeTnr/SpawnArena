@@ -44,7 +44,7 @@ public final class LiquidListener implements Listener, Runnable {
         }
 
         final Arena arena = SpawnArena.arenas.of(player);
-        final Fight fight = arena.getFight().orElse(null);
+        final Fight fight = arena.getFight(player);
 
         if (fight == null) {
             return;

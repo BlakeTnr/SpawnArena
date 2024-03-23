@@ -12,19 +12,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Fight {
+    UUID uuid = UUID.randomUUID();
     FightState fightState = FightState.INITALIZING;
     private Arena arena;
     PlayerPreFightData preFightData1;
     PlayerPreFightData preFightData2;
     Player fighter1;
     Player fighter2;
+    BukkitTask starting;
 
     public boolean bothFightersOnline() {
         return (fighter1.isOnline() && fighter2.isOnline());
@@ -42,9 +43,11 @@ public class Fight {
 
         this.fightState = FightState.OVER;
 
-        this.arena.clearFight();
+        this.arena.removeFight(this);
+        this.tryCancel(this.starting);
+        this.performShowLogic();
 
-        this.arena.arenaState = ArenaState.EMPTY;
+//        this.arena.arenaState = ArenaState.EMPTY;
     }
 
     public boolean isFighter(Player player) {
@@ -53,12 +56,12 @@ public class Fight {
 
     public void initiateFight(Player fighter1, Player fighter2, Arena arena) {
         this.arena = arena;
-        arena.setFight(this);
+        arena.addFight(this);
         this.fighter1 = fighter1;
         this.fighter2 = fighter2;
 
         Plugin plugin = SpawnArena.getPlugin(SpawnArena.class);
-        new BukkitRunnable() {
+        this.starting = new BukkitRunnable() {
             int counter = 5;
 
             @Override
@@ -78,6 +81,11 @@ public class Fight {
             }
             
         }.runTaskTimer(plugin, 20L, 20L);
+    }
+
+    private void tryCancel(final BukkitTask task) {
+        if (task != null && !task.isCancelled())
+            task.cancel();
     }
 
     private boolean onlineCheck(final BukkitRunnable runnable) {
@@ -118,7 +126,7 @@ public class Fight {
         return p != null && p.isOnline();
     }
 
-    private List<Player> getFighters() {
+    public List<Player> getFighters() {
         return Arrays.asList(this.fighter1, this.fighter2);
     }
 
@@ -156,7 +164,39 @@ public class Fight {
         }
         
         this.arena.teleportFighters(fighter1, fighter2);
+        this.performHideLogic();
+
         this.fightState = FightState.IN_FIGHT;
+    }
+
+    private void performHideLogic() {
+        for (final Player fighter : this.getFighters()) {
+            for (final Player other : this.arena.getOtherPlayers(this)) {
+                if (fighter == null || other == null)
+                    continue;
+
+                if (!fighter.isOnline() || !other.isOnline())
+                    continue;
+
+                fighter.hidePlayer(SpawnArena.INSTANCE, other);
+                other.hidePlayer(SpawnArena.INSTANCE, fighter);
+            }
+        }
+    }
+
+    private void performShowLogic() {
+        for (final Player fighter : this.getFighters()) {
+            for (final Player other : this.arena.getOtherPlayers(this)) {
+                if (fighter == null || other == null)
+                    continue;
+
+                if (!fighter.isOnline() || !other.isOnline())
+                    continue;
+
+                fighter.showPlayer(SpawnArena.INSTANCE, other);
+                other.showPlayer(SpawnArena.INSTANCE, fighter);
+            }
+        }
     }
 
     public void teleportToSpawn(final Player fighter) {
@@ -175,11 +215,13 @@ public class Fight {
         this.preFightData2.restore();
 
         this.fightState = FightState.OVER;
-        this.arena.clearFight();
+        this.arena.removeFight(this);
 //        this.arena.arenaState = ArenaState.EMPTY;
 
-        this.arena.arenaState = ArenaState.EMPTY;
+//        this.arena.arenaState = ArenaState.EMPTY;
         this.arena.queue.tryStartFight();
+        this.tryCancel(this.starting);
+        this.performShowLogic();
     }
 
     public void announceWinner(Player whoDied) {
@@ -283,5 +325,14 @@ public class Fight {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof Fight))
+            return false;
+
+        final Fight fight = (Fight) obj;
+        return fight.uuid.equals(this.uuid);
     }
 }

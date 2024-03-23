@@ -7,6 +7,7 @@ public abstract class ArenaOptions {
     private boolean deathOnTouchLiquid;
     private boolean winOnStepStonePressurePlate;
     private boolean giveKnockBackStick;
+    private ArenaMode arenaMode;
 
     public boolean isShouldClearItems() {
         return this.shouldClearItems;
@@ -25,6 +26,8 @@ public abstract class ArenaOptions {
     public boolean isWinOnStepStonePressurePlate() { return this.winOnStepStonePressurePlate; }
 
     public boolean isGiveKnockBackStick() { return this.giveKnockBackStick; }
+
+    public ArenaMode getArenaMode() { return this.arenaMode; }
 
     public ArenaOptions setShouldClearItems(final boolean value) {
         this.shouldClearItems = value;
@@ -53,6 +56,11 @@ public abstract class ArenaOptions {
 
     public ArenaOptions setGiveKnockBackStick(final boolean value) {
         this.giveKnockBackStick = value;
+        return this;
+    }
+
+    public ArenaOptions setArenaMode(final String arenaMode) {
+        this.arenaMode = ArenaMode.valueOf(arenaMode);
         return this;
     }
 }

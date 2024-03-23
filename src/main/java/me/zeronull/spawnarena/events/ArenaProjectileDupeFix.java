@@ -38,7 +38,7 @@ public final class ArenaProjectileDupeFix implements Listener {
         final Player shooter = (Player) shooterEntity;
         final Arena arena = SpawnArena.arenas.of(shooter);
 
-        if (arena != null && arena.getFight().get().getState() != FightState.IN_FIGHT) {
+        if (arena != null && arena.getFight(shooter) != null && arena.getFight(shooter).getState() != FightState.IN_FIGHT) {
             e.setCancelled(true);
             return;
         }
@@ -69,8 +69,8 @@ public final class ArenaProjectileDupeFix implements Listener {
             final Player shooter = (Player) source;
             final Arena arena = SpawnArena.arenas.of(shooter);
 
-            if (arena != null && arena.getFight().isPresent()) {
-                final Fight fight = arena.getFight().orElse(null);
+            if (arena != null && arena.getFight(shooter) != null) {
+                final Fight fight = arena.getFight(shooter);
 
                 if (fight.getState() == FightState.IN_FIGHT && !fight.isFighter(p))
                     e.setCancelled(true);

@@ -24,7 +24,10 @@ public class ArenaPlayerLeave implements Listener {
         }
 
         final Arena arena = SpawnArena.arenas.of(player);
-        final Fight fight = arena.getFight().get();
+        final Fight fight = arena.getFight(player);
+
+        if (fight == null)
+            return;
 
         if(fight.getState() == FightState.INITALIZING) {
             return;

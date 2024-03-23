@@ -15,7 +15,12 @@ commands:
     permission: spawnarena.setarenaspawn
     permission-message: "§cYou don't have permission!"
   createarena:
+    description: Create an arena
     permission: spawnarena.createarena
+    permission-message: "§cYou don't have permission!"
+  togglearenamode:
+    description: Alter the arena mode
+    permission: spawnarena.togglearenamode
     permission-message: "§cYou don't have permission!"
 
 permissions:
@@ -26,4 +31,6 @@ permissions:
   spawnarena.createarena:
     default: op
   spawnarena.allowcommandsinfight:
+    default: op
+  spawnarena.togglearenamode:
     default: op

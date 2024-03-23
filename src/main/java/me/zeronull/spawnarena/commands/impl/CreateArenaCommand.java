@@ -5,7 +5,7 @@ import me.zeronull.spawnarena.ArenaQueue;
 import me.zeronull.spawnarena.SavableArena;
 import me.zeronull.spawnarena.SpawnArena;
 import me.zeronull.spawnarena.commands.errors.SenderNotPlayerException;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

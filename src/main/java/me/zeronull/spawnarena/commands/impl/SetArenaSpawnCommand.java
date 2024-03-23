@@ -4,7 +4,7 @@ import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.SavableArena;
 import me.zeronull.spawnarena.SpawnArena;
 import me.zeronull.spawnarena.commands.ArenaTabComplete;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

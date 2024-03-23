@@ -1,6 +1,7 @@
 package me.zeronull.spawnarena.events;
 
 import me.zeronull.spawnarena.Arena;
+import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -45,9 +46,12 @@ public class ArenaDeathEvent implements Listener {
 
         event.setCancelled(true);
 
-        arena.getFight().ifPresent(fight -> {
-            fight.announceWinner(defender);
-            fight.endFight();
-        });
+        final Fight fight = arena.getFight(defender);
+
+        if (fight == null)
+            return;
+
+        fight.announceWinner(defender);
+        fight.endFight();
     }
 }

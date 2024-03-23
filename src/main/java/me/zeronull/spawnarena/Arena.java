@@ -9,8 +9,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class Arena extends ArenaOptions {
     public static final String SPAWN_WORLD = "SpawnWorld";
@@ -87,11 +87,10 @@ public abstract class Arena extends ArenaOptions {
     }
 
     public ArenaQueue queue;
-    protected ArenaState arenaState = ArenaState.EMPTY;
     protected String arenaName;
     protected Location spawnPoint1;
     protected Location spawnPoint2;
-    private Fight fight;
+    private List<Fight> fights = new ArrayList<>();
 
     public Arena(String arenaName) {
         this.arenaName = arenaName;
@@ -105,21 +104,47 @@ public abstract class Arena extends ArenaOptions {
         this.spawnPoint2 = spawnPoint2;
     }
 
-    public ArenaState getState() {
-        return arenaState;
+    public void addFight(Fight fight) {
+        this.fights.add(fight);
     }
 
-    public void setFight(Fight fight) {
-        this.fight = fight;
-        this.arenaState = ArenaState.IN_FIGHT;
+    public void removeFight(Fight fight) {
+        this.fights.remove(fight);
     }
 
-    public Optional<Fight> getFight() {
-        return Optional.ofNullable(fight);
+    public List<Fight> getFights() {
+        return this.fights;
     }
 
-    public void clearFight() {
-        this.fight = null;
+    public Fight getFight(final Player p) {
+        Fight found = null;
+
+        for (final Fight fight : this.getFights()) {
+            if (!fight.isFighter(p))
+                continue;
+
+            found = fight;
+            break;
+        }
+
+        return found;
+    }
+
+    public List<Player> getOtherPlayers(final Fight fight) {
+        final List<Player> players = new ArrayList<>();
+
+        for (final Fight f : this.fights) {
+            if (f.equals(fight))
+                continue;
+
+            players.addAll(f.getFighters());
+        }
+
+        return players;
+    }
+
+    public void clearFights() {
+        this.fights.clear();
     }
 
     public void teleportFighters(Player fighter1, Player fighter2) {

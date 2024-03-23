@@ -3,7 +3,7 @@ package me.zeronull.spawnarena.commands.impl;
 import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.SpawnArena;
 import me.zeronull.spawnarena.commands.ArenaTabComplete;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,6 +43,11 @@ public class JoinArenaQueueCommand extends ArenaTabComplete implements CommandEx
 
         if (SpawnArena.arenas.isInQueue(player, arena.queue)) {
             sender.sendMessage(ChatColor.RED + "You are already queued for another arena.");
+            return true;
+        }
+
+        if (SpawnArena.arenas.hasFighter(player)) {
+            sender.sendMessage(ChatColor.RED + "You are already in a fight!");
             return true;
         }
 

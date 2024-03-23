@@ -25,7 +25,7 @@ public final class ArenaPlayerInteractEvent implements Listener {
         }
 
         final Arena arena = SpawnArena.arenas.of(player);
-        final Fight fight = arena.getFight().orElse(null);
+        final Fight fight = arena.getFight(player);
 
         if (fight == null) {
             return;

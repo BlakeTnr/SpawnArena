@@ -38,9 +38,10 @@ public class ArenaQueue {
     }
 
     public void tryStartFight() {
-        boolean noCurrentFight = arena.arenaState == ArenaState.EMPTY;
+        boolean noCurrentFight = arena.getFights().isEmpty();
+//        boolean noCurrentFight = arena.arenaState == ArenaState.EMPTY;
 
-        if(queueHasAtLeast2Players() && noCurrentFight) {
+        if(queueHasAtLeast2Players() && (noCurrentFight || arena.getArenaMode() == ArenaMode.MULTI)) {
             Player[] twoOldest = pop2OldestPlayers();
             new Fight().initiateFight(twoOldest[0], twoOldest[1], arena);
         }

@@ -65,7 +65,8 @@ public final class Arenas implements Iterable<Arena> {
     public boolean isEmpty() { return this.arenas.isEmpty(); }
 
     public boolean hasActiveFight() {
-        return this.arenas.stream().anyMatch(arena -> arena.getFight().orElse(null) != null);
+        return this.arenas.stream().anyMatch(arena -> !arena.getFights().isEmpty());
+//        return this.arenas.stream().anyMatch(arena -> arena.getFight().orElse(null) != null);
     }
 
     /**
@@ -99,10 +100,11 @@ public final class Arenas implements Iterable<Arena> {
      */
     public Arena of(final Player fighter, final List<Arena> exclusions) {
         for (final Arena arena : this.arenas) {
-            if (arena.getFight().orElse(null) == null)
+            if (arena.getFights().isEmpty())
                 continue;
 
-            if (!arena.getFight().orElse(null).isFighter(fighter))
+//            if (!arena.getFight().orElse(null).isFighter(fighter))
+            if (!arena.getFights().stream().anyMatch(fight -> fight.isFighter(fighter)))
                 continue;
 
             if (!arenas.isEmpty() && exclusions.contains(arena))

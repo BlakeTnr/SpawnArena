@@ -2,6 +2,7 @@ package me.zeronull.spawnarena.config.impl;
 
 import de.exlll.configlib.Comment;
 import de.exlll.configlib.Configuration;
+import me.zeronull.spawnarena.ArenaMode;
 import org.bukkit.Location;
 
 @Configuration
@@ -32,4 +33,7 @@ public final class ArenaConfig {
 
     @Comment("Should it give the fighters knockback stick when they are first teleported into the arena")
     public boolean giveKnockBackStick;
+
+    @Comment("Mode of the arena: SINGLE, MULTI")
+    public String arenaMode = ArenaMode.SINGLE.toString();
 }
