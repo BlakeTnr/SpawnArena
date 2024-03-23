@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.ItemStack;
 
 public class ArenaPlayerLeaveAreaEvent implements Listener {
 
@@ -40,6 +41,7 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
         final Material type = event.getTo().clone().add(0, 0.5, 0).getBlock().getType();
         if (event.getCause() == TeleportCause.ENDER_PEARL && type.isSolid()) {
             event.setCancelled(true);
+            player.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, 1));
             return;
         }
 

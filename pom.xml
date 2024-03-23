@@ -32,6 +32,10 @@
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
     </repository>
+<!--    <repository>-->
+<!--      <id>dmulloy2-repo</id>-->
+<!--      <url>https://repo.dmulloy2.net/repository/public/</url>-->
+<!--    </repository>-->
   </repositories>
 
   <dependencies>
@@ -46,6 +50,12 @@
       <artifactId>configlib-core</artifactId>
       <version>v4.2.0</version>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.comphenix.protocol</groupId>-->
+<!--      <artifactId>ProtocolLib</artifactId>-->
+<!--      <version>4.8.0</version>-->
+<!--      <scope>provided</scope>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>com.github.Exlll.ConfigLib</groupId>
       <artifactId>configlib-paper</artifactId>
@@ -57,10 +67,10 @@
       <version>v4.2.0</version>
     </dependency>
     <dependency>
-           <groupId>org.spigotmc</groupId>
-           <artifactId>spigot-api</artifactId>
-           <version>1.20.1-R0.1-SNAPSHOT</version>
-           <scope>provided</scope>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.20.1-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>com.sk89q.worldguard</groupId>

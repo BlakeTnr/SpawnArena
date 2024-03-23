@@ -14,13 +14,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class Fight {
     UUID uuid = UUID.randomUUID();
     FightState fightState = FightState.INITALIZING;
-    private Arena arena;
+    Arena arena;
     PlayerPreFightData preFightData1;
     PlayerPreFightData preFightData2;
     Player fighter1;
@@ -261,6 +263,10 @@ public class Fight {
             stats.setInt(winStreakValue, 0);
             SpigotCoreBase.INSTANCE.getWs().updatePlayerState(state);
         }
+    }
+
+    public Arena getArena() {
+        return this.arena;
     }
 
     private void handleVictory(final Player winner) {
