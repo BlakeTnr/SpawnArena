@@ -11,16 +11,32 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Fight {
+    private static final ChatColor[] VIBRANT_COLORS = {
+            ChatColor.RED,
+            ChatColor.BLUE,
+            ChatColor.GREEN,
+            ChatColor.YELLOW,
+            ChatColor.AQUA,
+            ChatColor.WHITE,
+            ChatColor.LIGHT_PURPLE,
+            ChatColor.GRAY,
+            ChatColor.GOLD,
+            ChatColor.BLUE
+    };
+
     UUID uuid = UUID.randomUUID();
     FightState fightState = FightState.INITALIZING;
     Arena arena;
@@ -29,6 +45,9 @@ public class Fight {
     Player fighter1;
     Player fighter2;
     BukkitTask starting;
+    ChatColor color;
+
+    private Map<ChatColor, Team> teams = new HashMap<>();
 
     public boolean bothFightersOnline() {
         return (fighter1.isOnline() && fighter2.isOnline());
@@ -147,6 +166,8 @@ public class Fight {
     public void startFight() {
         Arena.ArenaUtils.kickOutLingeringPlayers();
 
+        this.color = this.getRandomColor();
+
         this.performOnFighters(fighter -> this.leaveParkour(fighter));
         this.performOnFighters(fighter -> fighter.closeInventory());
         this.performOnFighters(fighter -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "invsave " + fighter.getName()));
@@ -168,9 +189,60 @@ public class Fight {
         }
         
         this.arena.teleportFighters(fighter1, fighter2);
+        this.performOnFighters(fighter -> this.glowColor(fighter, this.color));
         this.performHideLogic();
 
         this.fightState = FightState.IN_FIGHT;
+    }
+
+    private ChatColor getRandomColor() {
+        final Random random = new Random();
+        final int index = random.nextInt(VIBRANT_COLORS.length);
+        return VIBRANT_COLORS[index];
+    }
+
+    private void glowColor(final Player player, final ChatColor color) {
+        final ScoreboardManager manager = Bukkit.getScoreboardManager();
+
+        if (manager == null)
+            return;
+
+        final Scoreboard scoreboard = manager.getMainScoreboard();
+        final Team team = scoreboard.registerNewTeam("arena-team-" + UUID.randomUUID());
+
+        team.setColor(color);
+        team.addEntry(player.getDisplayName());
+
+        this.teams.put(color, team);
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 0));
+    }
+
+    public void stopGlowing(final Player player) {
+        player.removePotionEffect(PotionEffectType.GLOWING);
+
+        final Team team = this.getTeam(player);
+        final ChatColor color = team.getColor();
+
+        this.teams.remove(color).unregister();
+    }
+
+    private Team getTeam(final Player p) {
+        for (final Team team : new ArrayList<>(this.teams.values())) {
+            if (!team.getEntries().stream().anyMatch(entry -> entry.equalsIgnoreCase(p.getDisplayName())))
+                continue;
+
+            return team;
+        }
+
+        return null;
+    }
+
+    public void clearTeams() {
+        for (final ChatColor color : new ArrayList<>(this.teams.keySet())) {
+            this.teams.remove(color).unregister();
+            this.performOnFighters(fighter -> fighter.removePotionEffect(PotionEffectType.GLOWING));
+        }
     }
 
     private void leaveParkour(final Player player) {
@@ -241,6 +313,8 @@ public class Fight {
     public void endFight() {
         this.fightState = FightState.ENDING;
 
+        this.performOnFighters(fighter -> this.stopGlowing(fighter));
+
         this.preFightData1.restore();
         this.preFightData2.restore();
 
@@ -252,6 +326,7 @@ public class Fight {
         this.arena.queue.tryStartFight();
         this.tryCancel(this.starting);
         this.performShowLogic();
+        this.clearTeams();
     }
 
     public void announceWinner(Player whoDied) {
