@@ -14,84 +14,11 @@ import java.util.List;
 
 public abstract class Arena extends ArenaOptions {
     public static final String SPAWN_WORLD = "SpawnWorld";
-
-    public static final class ArenaUtils {
-        public static final boolean WORLD_EDIT_SUPPORT;
-        public static final WorldGuard WORLD_GUARD_INSTANCE;
-        public static final RegionContainer REGION_CONTAINER;
-
-        static {
-            boolean worldEditSupport;
-
-            try {
-                Class.forName("com.sk89q.worldguard.WorldGuard");
-                worldEditSupport = true;
-            } catch (final ClassNotFoundException exception) {
-                worldEditSupport = false;
-            }
-
-            WORLD_EDIT_SUPPORT = worldEditSupport;
-
-            WORLD_GUARD_INSTANCE = !WORLD_EDIT_SUPPORT ? null : WorldGuard.getInstance();
-            REGION_CONTAINER = !WORLD_EDIT_SUPPORT ? null : WORLD_GUARD_INSTANCE.getPlatform().getRegionContainer();
-        }
-
-        public static void kickOutLingeringPlayers() {
-            for (final Player p : Bukkit.getOnlinePlayers())
-                kickOutLingeringPlayer(p);
-        }
-
-        public static void kickOutLingeringPlayer(final Player p) {
-            if (!WORLD_EDIT_SUPPORT)
-                return;
-
-//            System.out.println(String.format("Vanished: %s", isVanished(p)));
-            if (isVanished(p))
-                return;
-
-//            System.out.println(String.format("Spectator: %s", p.getGameMode() == GameMode.SPECTATOR));
-            if (p.getGameMode() == GameMode.SPECTATOR)
-                return;
-
-//            System.out.println(String.format("is Fighter: %s", SpawnArena.arenas.hasFighter(p)));
-            if (SpawnArena.arenas.hasFighter(p))
-                return;
-
-            final Location loc = p.getLocation();
-            final Arena arena = SpawnArena.arenas.of(loc);
-
-//            System.out.println(String.format("Arena is null: %s", arena == null));
-
-            if (arena != null)
-                p.performCommand(String.format("warp %s", arena.getArenaName()));
-        }
-
-        /**
-         * Checking if the player is vanished on SuperVanish/PremiumVanish
-         *
-         * @param player
-         * @return
-         */
-        public static boolean isVanished(final Player player) {
-            final List<MetadataValue> values = player.getMetadata("vanished");
-
-//        if (values.isEmpty())
-//            return SpigotCore.INSTANCE.getWs().getPlayerStateMap().get(player.getUniqueId()).isVanished();
-
-            for (final MetadataValue meta : values)
-                if (meta.asBoolean())
-                    return true;
-
-            return false;
-        }
-    }
-
     public ArenaQueue queue;
     protected String arenaName;
     protected Location spawnPoint1;
     protected Location spawnPoint2;
     private List<Fight> fights = new ArrayList<>();
-
     public Arena(String arenaName) {
         this.arenaName = arenaName;
     }
@@ -167,7 +94,9 @@ public abstract class Arena extends ArenaOptions {
         this.queue = queue;
     }
 
-    public String getArenaName() { return this.arenaName; }
+    public String getArenaName() {
+        return this.arenaName;
+    }
 
     public boolean isSetUp() {
         return this.spawnPoint1 != null && this.spawnPoint2 != null;
@@ -175,9 +104,10 @@ public abstract class Arena extends ArenaOptions {
 
     /**
      * Convert Arena class to any of its subtypes
+     *
      * @param clazz
-     * @return
      * @param <T>
+     * @return
      */
     public <T> T to(final Class<?> clazz) {
         if (!clazz.isInstance(this))
@@ -194,5 +124,76 @@ public abstract class Arena extends ArenaOptions {
         final Arena arena = (Arena) object;
         return arena.getArenaName().equals(this.getArenaName());
     }
-    
+
+    public static final class ArenaUtils {
+        public static final boolean WORLD_EDIT_SUPPORT;
+        public static final WorldGuard WORLD_GUARD_INSTANCE;
+        public static final RegionContainer REGION_CONTAINER;
+
+        static {
+            boolean worldEditSupport;
+
+            try {
+                Class.forName("com.sk89q.worldguard.WorldGuard");
+                worldEditSupport = true;
+            } catch (final ClassNotFoundException exception) {
+                worldEditSupport = false;
+            }
+
+            WORLD_EDIT_SUPPORT = worldEditSupport;
+
+            WORLD_GUARD_INSTANCE = !WORLD_EDIT_SUPPORT ? null : WorldGuard.getInstance();
+            REGION_CONTAINER = !WORLD_EDIT_SUPPORT ? null : WORLD_GUARD_INSTANCE.getPlatform().getRegionContainer();
+        }
+
+        public static void kickOutLingeringPlayers() {
+            for (final Player p : Bukkit.getOnlinePlayers())
+                kickOutLingeringPlayer(p);
+        }
+
+        public static void kickOutLingeringPlayer(final Player p) {
+            if (!WORLD_EDIT_SUPPORT)
+                return;
+
+//            System.out.println(String.format("Vanished: %s", isVanished(p)));
+            if (isVanished(p))
+                return;
+
+//            System.out.println(String.format("Spectator: %s", p.getGameMode() == GameMode.SPECTATOR));
+            if (p.getGameMode() == GameMode.SPECTATOR)
+                return;
+
+//            System.out.println(String.format("is Fighter: %s", SpawnArena.arenas.hasFighter(p)));
+            if (SpawnArena.arenas.hasFighter(p))
+                return;
+
+            final Location loc = p.getLocation();
+            final Arena arena = SpawnArena.arenas.of(loc);
+
+//            System.out.println(String.format("Arena is null: %s", arena == null));
+
+            if (arena != null)
+                p.performCommand(String.format("warp %s", arena.getArenaName()));
+        }
+
+        /**
+         * Checking if the player is vanished on SuperVanish/PremiumVanish
+         *
+         * @param player
+         * @return
+         */
+        public static boolean isVanished(final Player player) {
+            final List<MetadataValue> values = player.getMetadata("vanished");
+
+//        if (values.isEmpty())
+//            return SpigotCore.INSTANCE.getWs().getPlayerStateMap().get(player.getUniqueId()).isVanished();
+
+            for (final MetadataValue meta : values)
+                if (meta.asBoolean())
+                    return true;
+
+            return false;
+        }
+    }
+
 }

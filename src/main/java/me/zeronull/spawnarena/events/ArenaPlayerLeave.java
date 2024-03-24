@@ -15,11 +15,11 @@ public class ArenaPlayerLeave implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        if(!SpawnArena.arenas.hasActiveFight()) {
+        if (!SpawnArena.arenas.hasActiveFight()) {
             return;
         }
 
-        if(!SpawnArena.arenas.hasFighter(player)) {
+        if (!SpawnArena.arenas.hasFighter(player)) {
             return;
         }
 
@@ -29,12 +29,12 @@ public class ArenaPlayerLeave implements Listener {
         if (fight == null)
             return;
 
-        if(fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.INITALIZING) {
             return;
         }
 
         fight.announceWinner(player);
         fight.endFight();
     }
-    
+
 }

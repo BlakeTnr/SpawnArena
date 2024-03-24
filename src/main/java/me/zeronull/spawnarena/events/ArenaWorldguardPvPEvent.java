@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 public class ArenaWorldguardPvPEvent implements Listener {
     @EventHandler
     public void allowPlayerPVP(DisallowedPVPEvent event) {
-        if(!(event.getAttacker() instanceof Player) || !(event.getDefender() instanceof Player)) {
+        if (!(event.getAttacker() instanceof Player) || !(event.getDefender() instanceof Player)) {
             return;
         }
 

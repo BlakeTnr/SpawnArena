@@ -3,11 +3,15 @@ package me.zeronull.spawnarena;
 import club.hellin.vivillyapi.SpigotCoreBase;
 import club.hellin.vivillyapi.models.impl.PlayerStateBase;
 import club.hellin.vivillyapi.models.impl.objects.ArenaStatsBase;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -93,7 +97,7 @@ public class Fight {
                 if (onlineCheck)
                     return;
 
-                if(counter == 0) {
+                if (counter == 0) {
                     startFight();
                     this.cancel();
                 } else {
@@ -101,7 +105,7 @@ public class Fight {
                     counter--;
                 }
             }
-            
+
         }.runTaskTimer(plugin, 20L, 20L);
     }
 
@@ -168,8 +172,9 @@ public class Fight {
 
         this.color = this.getRandomColor();
 
-        this.performOnFighters(fighter -> this.leaveParkour(fighter));
-        this.performOnFighters(fighter -> fighter.closeInventory());
+        this.performOnFighters(fighter -> fighter.setInvulnerable(false));
+        this.performOnFighters(this::leaveParkour);
+        this.performOnFighters(HumanEntity::closeInventory);
         this.performOnFighters(fighter -> Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "invsave " + fighter.getName()));
 
         preFightData1 = new PlayerPreFightData(fighter1);
@@ -187,7 +192,7 @@ public class Fight {
 
             this.performOnFighters(fighter -> fighter.getInventory().addItem(stick));
         }
-        
+
         this.arena.teleportFighters(fighter1, fighter2);
         this.performOnFighters(fighter -> this.glowColor(fighter, this.color));
         this.performHideLogic();
@@ -215,13 +220,17 @@ public class Fight {
 
         this.teams.put(color, team);
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 0));
+        player.setGlowing(true);
     }
 
     public void stopGlowing(final Player player) {
-        player.removePotionEffect(PotionEffectType.GLOWING);
+        player.setGlowing(false);
 
         final Team team = this.getTeam(player);
+
+        if (team == null)
+            return;
+
         final ChatColor color = team.getColor();
 
         this.teams.remove(color).unregister();
@@ -229,7 +238,7 @@ public class Fight {
 
     private Team getTeam(final Player p) {
         for (final Team team : new ArrayList<>(this.teams.values())) {
-            if (!team.getEntries().stream().anyMatch(entry -> entry.equalsIgnoreCase(p.getDisplayName())))
+            if (team.getEntries().stream().noneMatch(entry -> entry.equalsIgnoreCase(p.getDisplayName())))
                 continue;
 
             return team;
@@ -241,7 +250,7 @@ public class Fight {
     public void clearTeams() {
         for (final ChatColor color : new ArrayList<>(this.teams.keySet())) {
             this.teams.remove(color).unregister();
-            this.performOnFighters(fighter -> fighter.removePotionEffect(PotionEffectType.GLOWING));
+            this.performOnFighters(fighter -> fighter.setGlowing(false));
         }
     }
 
@@ -266,8 +275,8 @@ public class Fight {
                 final Method leaveCourseMethod = playerManagerClass.getDeclaredMethod("leaveCourse", Player.class);
                 leaveCourseMethod.invoke(playerManager, player);
             }
-        } catch (final Exception exception) {
-            exception.printStackTrace();
+        } catch (Exception ignored) {
+            System.out.println("Parkour not loaded, skipping...");
         }
     }
 
@@ -313,7 +322,7 @@ public class Fight {
     public void endFight() {
         this.fightState = FightState.ENDING;
 
-        this.performOnFighters(fighter -> this.stopGlowing(fighter));
+        this.performOnFighters(this::stopGlowing);
 
         this.preFightData1.restore();
         this.preFightData2.restore();
@@ -331,29 +340,33 @@ public class Fight {
 
     public void announceWinner(Player whoDied) {
         Player winner;
-        String winnerName;
+        Component winnerName;
 
         Player loser;
-        String loserName;
+        Component loserName;
 
-        if(fighter1.equals(whoDied)) {
+        if (fighter1.equals(whoDied)) {
             winner = fighter2;
-            winnerName = fighter2.getDisplayName();
+            winnerName = fighter2.displayName();
 
             loser = fighter1;
-            loserName = fighter1.getDisplayName();
+            loserName = fighter1.displayName();
         } else {
             winner = fighter1;
-            winnerName = fighter1.getDisplayName();
+            winnerName = fighter1.displayName();
 
             loser = fighter2;
-            loserName = fighter2.getDisplayName();
+            loserName = fighter2.displayName();
         }
 
         this.handleDeath(loser);
         this.handleVictory(winner);
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&4" + winnerName + "&4 beat " + loserName + String.format("&4 in the %sarena!", "arena".equals(this.arena.getArenaName()) ? "" : this.arena.getArenaName() + " ")));
+        Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<red><winner> beat <loser> in the <arena> arena!",
+                Placeholder.component("winner", winnerName),
+                Placeholder.component("loser", loserName),
+                Placeholder.parsed("arena", "arena".equals(this.arena.getArenaName()) ? "" : this.arena.getArenaName())
+        ));
     }
 
     private void handleDeath(final Player loser) {
@@ -394,54 +407,34 @@ public class Fight {
         }
     }
 
-    public enum ValueType {
-        WINS,
-        STREAK,
-        BEST_STREAK;
-    }
-
     private ArenaStatsBase.Values getValue(final String arenaName, final ValueType type) {
-        switch (type) {
-            case WINS: {
-                switch (arenaName.toLowerCase()) {
-                    case "arena":
-                        return ArenaStatsBase.Values.ARENA_WINS;
-                    case "sumo":
-                        return ArenaStatsBase.Values.SUMO_WINS;
-                }
-                break;
-            }
+        return switch (type) {
+            case WINS -> switch (arenaName.toLowerCase()) {
+                case "arena" -> ArenaStatsBase.Values.ARENA_WINS;
+                case "sumo" -> ArenaStatsBase.Values.SUMO_WINS;
+                default -> null;
+            };
+            case STREAK -> switch (arenaName.toLowerCase()) {
+                case "arena" -> ArenaStatsBase.Values.ARENA_WIN_STREAK;
+                case "sumo" -> ArenaStatsBase.Values.SUMO_WIN_STREAK;
+                default -> null;
+            };
+            default -> null;
+        };
 
-            case STREAK: {
-                switch (arenaName.toLowerCase()) {
-                    case "arena":
-                        return ArenaStatsBase.Values.ARENA_WIN_STREAK;
-                    case "sumo":
-                        return ArenaStatsBase.Values.SUMO_WIN_STREAK;
-                }
-                break;
-            }
-
-//            case BEST_STREAK: {
-//                switch (arenaName.toLowerCase()) {
-//                    case "arena":
-//                        return ArenaStatsBase.Values.BEST_ARENA_WIN_STREAK;
-//                    case "sumo":
-//                        return ArenaStatsBase.Values.BEST_SUMO_WIN_STREAK;
-//                }
-//                break;
-//            }
-        }
-
-        return null;
     }
 
     @Override
     public boolean equals(final Object obj) {
-        if (!(obj instanceof Fight))
+        if (!(obj instanceof Fight fight))
             return false;
 
-        final Fight fight = (Fight) obj;
         return fight.uuid.equals(this.uuid);
+    }
+
+    public enum ValueType {
+        WINS,
+        STREAK,
+        BEST_STREAK;
     }
 }

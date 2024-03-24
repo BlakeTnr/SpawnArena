@@ -35,11 +35,11 @@ public final class LiquidListener implements Listener, Runnable {
     public void onPlayerEnterLiquid(final PlayerLiquidEnterEvent e) {
         final Player player = e.getPlayer();
 
-        if(!SpawnArena.arenas.hasActiveFight()) {
+        if (!SpawnArena.arenas.hasActiveFight()) {
             return;
         }
 
-        if(!SpawnArena.arenas.hasFighter(player)) {
+        if (!SpawnArena.arenas.hasFighter(player)) {
             return;
         }
 
@@ -50,7 +50,7 @@ public final class LiquidListener implements Listener, Runnable {
             return;
         }
 
-        if(fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.INITALIZING) {
             return;
         }
 

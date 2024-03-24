@@ -16,7 +16,7 @@ public class ConfigHandler {
     }
 
     public static ConfigHandler getInstance() {
-        if(!(config instanceof ConfigHandler)) {
+        if (!(config instanceof ConfigHandler)) {
             config = new ConfigHandler();
         }
 
@@ -105,5 +105,5 @@ public class ConfigHandler {
 //        }
 //        ConfigHandler.getInstance().saveCustomConfig(config);
 //    }
-    
+
 }

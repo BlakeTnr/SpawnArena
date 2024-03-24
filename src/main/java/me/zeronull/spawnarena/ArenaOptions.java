@@ -13,25 +13,13 @@ public abstract class ArenaOptions {
         return this.shouldClearItems;
     }
 
-    public boolean isAllowDamage() {
-        return this.allowDamage;
-    }
-
-    public boolean isAllowPvp() {
-        return this.allowPvp;
-    }
-
-    public boolean isDeathOnTouchLiquid() { return this.deathOnTouchLiquid; }
-
-    public boolean isWinOnStepStonePressurePlate() { return this.winOnStepStonePressurePlate; }
-
-    public boolean isGiveKnockBackStick() { return this.giveKnockBackStick; }
-
-    public ArenaMode getArenaMode() { return this.arenaMode; }
-
     public ArenaOptions setShouldClearItems(final boolean value) {
         this.shouldClearItems = value;
         return this;
+    }
+
+    public boolean isAllowDamage() {
+        return this.allowDamage;
     }
 
     public ArenaOptions setAllowDamage(final boolean value) {
@@ -39,9 +27,17 @@ public abstract class ArenaOptions {
         return this;
     }
 
+    public boolean isAllowPvp() {
+        return this.allowPvp;
+    }
+
     public ArenaOptions setAllowPvp(final boolean value) {
         this.allowPvp = value;
         return this;
+    }
+
+    public boolean isDeathOnTouchLiquid() {
+        return this.deathOnTouchLiquid;
     }
 
     public ArenaOptions setDeathOnTouchLiquid(final boolean value) {
@@ -49,14 +45,26 @@ public abstract class ArenaOptions {
         return this;
     }
 
+    public boolean isWinOnStepStonePressurePlate() {
+        return this.winOnStepStonePressurePlate;
+    }
+
     public ArenaOptions setWinOnStepStonePressurePlate(final boolean value) {
         this.winOnStepStonePressurePlate = value;
         return this;
     }
 
+    public boolean isGiveKnockBackStick() {
+        return this.giveKnockBackStick;
+    }
+
     public ArenaOptions setGiveKnockBackStick(final boolean value) {
         this.giveKnockBackStick = value;
         return this;
+    }
+
+    public ArenaMode getArenaMode() {
+        return this.arenaMode;
     }
 
     public ArenaOptions setArenaMode(final String arenaMode) {

@@ -18,12 +18,12 @@ public final class ToggleArenaModeCommand extends ArenaTabComplete implements Co
 
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        if(!(sender instanceof Player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("You must be a player to run this command!");
             return true;
         }
 
-        if(args.length < 1) {
+        if (args.length < 1) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cUsage: /togglearenamode <name>"));
             return true;
         }
@@ -32,7 +32,7 @@ public final class ToggleArenaModeCommand extends ArenaTabComplete implements Co
 
         Player player = (Player) sender;
 
-        if(!(player.getLocation().getWorld().getName().equalsIgnoreCase(Arena.SPAWN_WORLD))) {
+        if (!(player.getLocation().getWorld().getName().equalsIgnoreCase(Arena.SPAWN_WORLD))) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou must be at spawn to use this command!"));
             return true;
         }

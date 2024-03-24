@@ -16,12 +16,12 @@ public class JoinArenaQueueCommand extends ArenaTabComplete implements CommandEx
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("You must be a player to run this command!");
             return true;
         }
 
-        if(args.length < 1) {
+        if (args.length < 1) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cUsage: /joinarenaqueue <name>"));
             return true;
         }
@@ -51,12 +51,12 @@ public class JoinArenaQueueCommand extends ArenaTabComplete implements CommandEx
             return true;
         }
 
-        if(!(player.getLocation().getWorld().getName().equalsIgnoreCase(Arena.SPAWN_WORLD))) {
+        if (!(player.getLocation().getWorld().getName().equalsIgnoreCase(Arena.SPAWN_WORLD))) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou must be at spawn to use this command!"));
             return true;
         }
 
-        if(arena.queue.playerInQueue(player)) {
+        if (arena.queue.playerInQueue(player)) {
             arena.queue.removePlayer(player);
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eYou've been removed from the queue!"));
             return true;
@@ -67,5 +67,5 @@ public class JoinArenaQueueCommand extends ArenaTabComplete implements CommandEx
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eWarning! If you have issues (e.g. losing inventory, want you inventory restored due to other issue), &c&l&ndo NOT&e rejoin the arena, tell warn staff and players, and avoid dying excessive amount of times. Otherwise, your inventory logs will be lost!"));
         return true;
     }
-    
+
 }

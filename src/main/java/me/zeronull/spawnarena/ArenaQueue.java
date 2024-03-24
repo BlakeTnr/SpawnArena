@@ -10,7 +10,7 @@ public class ArenaQueue {
     public static final Map<Player, ArenaQueue> PLAYER_QUEUE_MAP = new HashMap<>();
 
     private final Arena arena;
-//    private static ArenaQueue singletonInstance = null;
+    //    private static ArenaQueue singletonInstance = null;
     private final ArrayList<Player> playerQueue = new ArrayList<Player>();
 
     public ArenaQueue(final Arena arena) {
@@ -41,12 +41,12 @@ public class ArenaQueue {
         boolean noCurrentFight = arena.getFights().isEmpty();
 //        boolean noCurrentFight = arena.arenaState == ArenaState.EMPTY;
 
-        if(queueHasAtLeast2Players() && (noCurrentFight || arena.getArenaMode() == ArenaMode.MULTI)) {
+        if (queueHasAtLeast2Players() && (noCurrentFight || arena.getArenaMode() == ArenaMode.MULTI)) {
             Player[] twoOldest = pop2OldestPlayers();
             new Fight().initiateFight(twoOldest[0], twoOldest[1], arena);
         }
     }
-    
+
     public void addPlayerToQueue(Player player) {
         playerQueue.add(player);
         PLAYER_QUEUE_MAP.put(player, this);
@@ -55,15 +55,15 @@ public class ArenaQueue {
 
     public Player[] pop2OldestPlayers() {
         int size = playerQueue.size();
-        Player player1 = playerQueue.get(size-1);
-        playerQueue.remove(size-1);
+        Player player1 = playerQueue.get(size - 1);
+        playerQueue.remove(size - 1);
         PLAYER_QUEUE_MAP.remove(player1);
 
-        Player player2 = playerQueue.get(size-2);
-        playerQueue.remove(size-2);
+        Player player2 = playerQueue.get(size - 2);
+        playerQueue.remove(size - 2);
         PLAYER_QUEUE_MAP.remove(player2);
 
-        Player[] twoOldest = { player1, player2 };
+        Player[] twoOldest = {player1, player2};
         return twoOldest;
     }
 

@@ -18,6 +18,63 @@ public final class SavableArena extends Arena {
         this.configName = String.format("%s.yml", super.getArenaName());
     }
 
+    public static SavableArena deserialize(final File configFile) {
+        final ArenaConfig config = getArenaConfig(configFile);
+        return deserialize(config);
+    }
+
+    public static SavableArena deserialize(final ArenaConfig config) {
+        final SavableArena arena = new SavableArena(config.arenaName);
+
+        arena.setSpawnPoint1(config.spawnPoint1);
+        arena.setSpawnPoint2(config.spawnPoint2);
+
+        arena.setShouldClearItems(config.shouldClearItems);
+        arena.setAllowDamage(config.allowDamage);
+        arena.setAllowPvp(config.allowPvp);
+        arena.setDeathOnTouchLiquid(config.deathOnTouchLiquid);
+        arena.setWinOnStepStonePressurePlate(config.winOnStepStonePressurePlate);
+        arena.setGiveKnockBackStick(config.giveKnockBackStick);
+
+        return arena;
+    }
+
+    public static ArenaConfig getArenaConfig(final File configFile) {
+        final YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
+                .build();
+
+        final ArenaConfig config = YamlConfigurations.load(
+                configFile.toPath(),
+                ArenaConfig.class,
+                properties
+        );
+
+        return config;
+    }
+
+    public static void createArenaConfig(final File configFile) {
+        final YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
+                .build();
+
+        YamlConfigurations.update(
+                configFile.toPath(),
+                ArenaConfig.class,
+                properties
+        );
+    }
+
+    public static void saveArenaConfig(final File configFile, final ArenaConfig config) {
+        final YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
+                .build();
+
+        YamlConfigurations.save(
+                configFile.toPath(),
+                ArenaConfig.class,
+                config,
+                properties
+        );
+    }
+
     @Override
     public void setSpawnPoint1(final Location spawnPoint1) {
         this.save(config -> config.spawnPoint1 = spawnPoint1);
@@ -77,62 +134,5 @@ public final class SavableArena extends Arena {
 
         action.accept(config);
         saveArenaConfig(configFile, config);
-    }
-
-    public static SavableArena deserialize(final File configFile) {
-        final ArenaConfig config = getArenaConfig(configFile);
-        return deserialize(config);
-    }
-
-    public static SavableArena deserialize(final ArenaConfig config) {
-        final SavableArena arena = new SavableArena(config.arenaName);
-
-        arena.setSpawnPoint1(config.spawnPoint1);
-        arena.setSpawnPoint2(config.spawnPoint2);
-
-        arena.setShouldClearItems(config.shouldClearItems);
-        arena.setAllowDamage(config.allowDamage);
-        arena.setAllowPvp(config.allowPvp);
-        arena.setDeathOnTouchLiquid(config.deathOnTouchLiquid);
-        arena.setWinOnStepStonePressurePlate(config.winOnStepStonePressurePlate);
-        arena.setGiveKnockBackStick(config.giveKnockBackStick);
-
-        return arena;
-    }
-
-    public static ArenaConfig getArenaConfig(final File configFile) {
-        final YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
-                .build();
-
-        final ArenaConfig config = YamlConfigurations.load(
-                configFile.toPath(),
-                ArenaConfig.class,
-                properties
-        );
-
-        return config;
-    }
-
-    public static void createArenaConfig(final File configFile) {
-        final YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
-                .build();
-
-        YamlConfigurations.update(
-                configFile.toPath(),
-                ArenaConfig.class,
-                properties
-        );
-    }
-
-    public static void saveArenaConfig(final File configFile, final ArenaConfig config) {
-        final YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
-                .build();
-
-        YamlConfigurations.save(
-                configFile.toPath(),
-                ArenaConfig.class,
-                config,
-                properties
-        );
     }
 }
