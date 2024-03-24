@@ -13,41 +13,14 @@ import java.util.Iterator;
 import java.util.List;
 
 public final class Arenas implements Iterable<Arena> {
-    public final class ArenasIterator implements Iterator<Arena> {
-        private int currentIndex;
-        private final List<Arena> arenas;
-
-        public ArenasIterator(final List<Arena> arenas) {
-            this.currentIndex = -1;
-            this.arenas = arenas;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return this.currentIndex < this.arenas.size() - 1;
-        }
-
-        @Override
-        public Arena next() {
-            if (!hasNext())
-                this.currentIndex = -1;
-
-            return this.arenas.get(++this.currentIndex);
-        }
-
-        public int getCurrentIndex() {
-            return this.currentIndex;
-        }
-
-        public List<Arena> toList() {
-            return this.arenas;
-        }
-    }
-
     private final List<Arena> arenas;
 
     private Arenas(final List<Arena> arenas) {
         this.arenas = arenas;
+    }
+
+    public static Arenas fromList(final List<Arena> arenas) {
+        return new Arenas(arenas);
     }
 
     public void add(final Arena arena) {
@@ -62,7 +35,9 @@ public final class Arenas implements Iterable<Arena> {
         return this.arenas.contains(arena);
     }
 
-    public boolean isEmpty() { return this.arenas.isEmpty(); }
+    public boolean isEmpty() {
+        return this.arenas.isEmpty();
+    }
 
     public boolean hasActiveFight() {
         return this.arenas.stream().anyMatch(arena -> !arena.getFights().isEmpty());
@@ -71,6 +46,7 @@ public final class Arenas implements Iterable<Arena> {
 
     /**
      * Checks if fighter is contained with any of these arenas
+     *
      * @param fighter
      * @return
      */
@@ -85,6 +61,7 @@ public final class Arenas implements Iterable<Arena> {
 
     /**
      * Gets the arena of the fighter
+     *
      * @param fighter
      * @return
      */
@@ -94,6 +71,7 @@ public final class Arenas implements Iterable<Arena> {
 
     /**
      * Gets the arena of the fighter
+     *
      * @param fighter
      * @param exclusions
      * @return
@@ -118,6 +96,7 @@ public final class Arenas implements Iterable<Arena> {
 
     /**
      * Gets the arena of specified name
+     *
      * @param name
      * @return
      */
@@ -136,6 +115,7 @@ public final class Arenas implements Iterable<Arena> {
      * Attempts to get an Arena depending on whether a player is standing inside of it
      * Uses WorldGuard to figure it out
      * If there is no region with the same name as the arena name, it will not work
+     *
      * @param loc
      * @return
      */
@@ -162,6 +142,7 @@ public final class Arenas implements Iterable<Arena> {
 
     /**
      * Get an Arena that the player is queued for
+     *
      * @param player
      * @return
      */
@@ -171,6 +152,7 @@ public final class Arenas implements Iterable<Arena> {
 
     /**
      * Checks if player is in any of the queues for any of the arenas
+     *
      * @param p
      * @return
      */
@@ -184,6 +166,7 @@ public final class Arenas implements Iterable<Arena> {
 
     /**
      * Check if Arena exists
+     *
      * @param name
      * @return
      */
@@ -195,12 +178,39 @@ public final class Arenas implements Iterable<Arena> {
         return this.arenas;
     }
 
-    public static Arenas fromList(final List<Arena> arenas) {
-        return new Arenas(arenas);
-    }
-
     @Override
     public Iterator<Arena> iterator() {
         return new ArenasIterator(this.arenas);
+    }
+
+    public final class ArenasIterator implements Iterator<Arena> {
+        private final List<Arena> arenas;
+        private int currentIndex;
+
+        public ArenasIterator(final List<Arena> arenas) {
+            this.currentIndex = -1;
+            this.arenas = arenas;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return this.currentIndex < this.arenas.size() - 1;
+        }
+
+        @Override
+        public Arena next() {
+            if (!hasNext())
+                this.currentIndex = -1;
+
+            return this.arenas.get(++this.currentIndex);
+        }
+
+        public int getCurrentIndex() {
+            return this.currentIndex;
+        }
+
+        public List<Arena> toList() {
+            return this.arenas;
+        }
     }
 }

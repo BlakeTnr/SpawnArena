@@ -20,11 +20,11 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
     public void onPlayerTeleportOut(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
 
-        if(!SpawnArena.arenas.hasActiveFight()) {
+        if (!SpawnArena.arenas.hasActiveFight()) {
             return;
         }
 
-        if(!SpawnArena.arenas.hasFighter(player)) {
+        if (!SpawnArena.arenas.hasFighter(player)) {
             return;
         }
 
@@ -34,7 +34,7 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
         if (fight == null)
             return;
 
-        if(fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING) {
             return;
         }
 
@@ -49,7 +49,7 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
         if (to != null && to.equals(arena))
             return;
 
-        if(event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.UNKNOWN) {
+        if (event.getCause() == TeleportCause.COMMAND || event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.UNKNOWN) {
             fight.announceWinner(player);
             fight.endFight();
         }
@@ -65,10 +65,10 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
         if (e.getCause() != EntityDamageEvent.DamageCause.SUFFOCATION)
             return;
 
-        if(!SpawnArena.arenas.hasActiveFight())
+        if (!SpawnArena.arenas.hasActiveFight())
             return;
 
-        if(!SpawnArena.arenas.hasFighter(p))
+        if (!SpawnArena.arenas.hasFighter(p))
             return;
 
         final Arena arena = SpawnArena.arenas.of(p);
@@ -77,7 +77,7 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
         if (fight == null)
             return;
 
-        if(fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING)
+        if (fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING)
             return;
 
         final Arena to = SpawnArena.arenas.of(p.getLocation());
@@ -86,6 +86,6 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
 
         fight.teleportToSpawn(p);
     }
-    
+
 }
 

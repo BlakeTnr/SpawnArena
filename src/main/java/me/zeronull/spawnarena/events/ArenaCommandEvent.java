@@ -13,20 +13,20 @@ public class ArenaCommandEvent implements Listener {
     public void onCommandExecution(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if(!SpawnArena.arenas.hasActiveFight()) {
+        if (!SpawnArena.arenas.hasActiveFight()) {
             return;
         }
 
-        if(!SpawnArena.arenas.hasFighter(player)) {
+        if (!SpawnArena.arenas.hasFighter(player)) {
             return;
         }
 
-        if(player.hasPermission("spawnarena.allowcommandsinfight")) {
+        if (player.hasPermission("spawnarena.allowcommandsinfight")) {
             return;
         }
 
         event.setCancelled(true);
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou can't execute commands while in the arena!"));
     }
-    
+
 }

@@ -13,11 +13,11 @@ public class PlayerLeaveSpawn implements Listener {
     public void onPlayerLeaveSpawn(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
 
-        if(!SpawnArena.arenas.isInQueue(player)) {
+        if (!SpawnArena.arenas.isInQueue(player)) {
             return;
         }
 
-        if(event.getTo().getWorld().getName().equalsIgnoreCase(Arena.SPAWN_WORLD)) {
+        if (event.getTo().getWorld().getName().equalsIgnoreCase(Arena.SPAWN_WORLD)) {
             return;
         }
 

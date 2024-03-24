@@ -15,11 +15,11 @@ public class ArenaDropItemEvent implements Listener {
         if (!SpawnArena.arenas.hasActiveFight())
             return;
 
-        if(!SpawnArena.arenas.hasFighter(player)) {
+        if (!SpawnArena.arenas.hasFighter(player)) {
             return;
         }
 
-        if(player.hasPermission("spawnarena.allowdropinfight")) {
+        if (player.hasPermission("spawnarena.allowdropinfight")) {
             return;
         }
 

@@ -17,14 +17,14 @@ public final class CreateArenaCommand implements CommandExecutor {
         try {
             validateSenderIsPlayer(sender);
 
-            if(args.length < 1) {
+            if (args.length < 1) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cUsage: /createarena <name>"));
                 return true;
             }
 
             Player player = (Player) sender;
 
-            if(!(player.getLocation().getWorld().getName().equalsIgnoreCase(Arena.SPAWN_WORLD))) {
+            if (!(player.getLocation().getWorld().getName().equalsIgnoreCase(Arena.SPAWN_WORLD))) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou must be at spawn to use this command!"));
                 return true;
             }
@@ -47,14 +47,14 @@ public final class CreateArenaCommand implements CommandExecutor {
 
             sender.sendMessage(ChatColor.GREEN + String.format("Created arena '%s'!", arena.getArenaName()));
             return true;
-        } catch(SenderNotPlayerException e) {
+        } catch (SenderNotPlayerException e) {
             sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
             return true;
-        } 
+        }
     }
 
     public void validateSenderIsPlayer(CommandSender sender) throws SenderNotPlayerException {
-        if(sender instanceof Player)
+        if (sender instanceof Player)
             return;
 
         throw new SenderNotPlayerException("Sender not player");

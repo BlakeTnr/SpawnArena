@@ -43,6 +43,7 @@ public class PlayerPreFightData {
 
     /**
      * Deserialize PlayerPreFightData from a JSONObject
+     *
      * @param obj
      * @throws IOException
      */
@@ -93,10 +94,10 @@ public class PlayerPreFightData {
 
     private ItemStack[] cloneItemStackArray(ItemStack[] items) {
         ItemStack[] newArray = new ItemStack[items.length];
-        for(int i=0; i<items.length; i++) {
-            try{
+        for (int i = 0; i < items.length; i++) {
+            try {
                 newArray[i] = items[i].clone();
-            } catch(NullPointerException e) {
+            } catch (NullPointerException e) {
                 continue;
             }
         }

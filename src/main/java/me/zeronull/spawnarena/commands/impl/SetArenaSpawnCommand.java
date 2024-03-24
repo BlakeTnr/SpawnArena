@@ -18,12 +18,12 @@ public class SetArenaSpawnCommand extends ArenaTabComplete implements CommandExe
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)) {
+        if (!(sender instanceof Player)) {
             sender.sendMessage("You must be a player to run this command!");
             return true;
         }
-        
-        if(args.length < 2) {
+
+        if (args.length < 2) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cUsage: /setarenaspawn (1/2) <arena>"));
             return true;
         }
@@ -40,7 +40,7 @@ public class SetArenaSpawnCommand extends ArenaTabComplete implements CommandExe
 
         final SavableArena arena = SpawnArena.arenas.of(arenaName).to(SavableArena.class);
 
-        if(spawnNumber != 1 && spawnNumber != 2) {
+        if (spawnNumber != 1 && spawnNumber != 2) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cImproper spawn point number!"));
             return true;
         }

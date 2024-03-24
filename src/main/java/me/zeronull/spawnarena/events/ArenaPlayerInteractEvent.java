@@ -20,7 +20,7 @@ public final class ArenaPlayerInteractEvent implements Listener {
         if (!SpawnArena.arenas.hasActiveFight())
             return;
 
-        if(!SpawnArena.arenas.hasFighter(player)) {
+        if (!SpawnArena.arenas.hasFighter(player)) {
             return;
         }
 
@@ -31,7 +31,7 @@ public final class ArenaPlayerInteractEvent implements Listener {
             return;
         }
 
-        if(fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.INITALIZING) {
             return;
         }
 

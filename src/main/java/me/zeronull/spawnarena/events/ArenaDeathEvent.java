@@ -14,7 +14,7 @@ public class ArenaDeathEvent implements Listener {
 
     @EventHandler
     public void onPlayerDeath(EntityDamageEvent event) {
-        if(!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player)) {
             return;
         }
 
@@ -23,8 +23,8 @@ public class ArenaDeathEvent implements Listener {
         if (!SpawnArena.arenas.hasActiveFight()) {
             return;
         }
-        
-        if(!(SpawnArena.arenas.hasFighter(defender))) {
+
+        if (!(SpawnArena.arenas.hasFighter(defender))) {
             return;
         }
 
@@ -36,11 +36,11 @@ public class ArenaDeathEvent implements Listener {
         if (!arena.isAllowPvp())
             event.setCancelled(true);
 
-        if(!((defender.getHealth() - event.getFinalDamage()) <= 0)) {
+        if (!((defender.getHealth() - event.getFinalDamage()) <= 0)) {
             return;
         }
 
-        if(defender.getInventory().getItemInOffHand().getType() == BYPASS_ITEM || defender.getInventory().getItemInMainHand().getType() == BYPASS_ITEM) {
+        if (defender.getInventory().getItemInOffHand().getType() == BYPASS_ITEM || defender.getInventory().getItemInMainHand().getType() == BYPASS_ITEM) {
             return;
         }
 
