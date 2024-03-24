@@ -310,10 +310,10 @@ public class Fight {
         this.handleDeath(loser);
         this.handleVictory(winner);
 
-        Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<red><winner> beat <loser> in the <arena>arena!",
+        Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_red><winner> beat <loser> in the <arena>arena!",
                 Placeholder.component("winner", winnerName),
                 Placeholder.component("loser", loserName),
-                Placeholder.parsed("arena", "arena".equals(this.arena.getArenaName()) ? "" : " " + this.arena.getArenaName())
+                Placeholder.parsed("arena", "arena".equals(this.arena.getArenaName()) ? "" : this.arena.getArenaName() + " ")
         ));
     }
 
