@@ -15,13 +15,8 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
-import org.bukkit.scoreboard.Team;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -51,7 +46,7 @@ public class Fight {
     BukkitTask starting;
     ChatColor color;
 
-    private Map<ChatColor, Team> teams = new HashMap<>();
+    private Map<UUID, ChatColor> teams = new HashMap<>(); // UUID -> Original ChatColor
 
     public boolean bothFightersOnline() {
         return (fighter1.isOnline() && fighter2.isOnline());
@@ -194,9 +189,8 @@ public class Fight {
         }
 
         this.arena.teleportFighters(fighter1, fighter2);
-        this.performOnFighters(fighter -> this.glowColor(fighter, this.color));
-        this.performHideLogic();
 
+        this.performHideLogic();
         this.fightState = FightState.IN_FIGHT;
     }
 
@@ -206,52 +200,8 @@ public class Fight {
         return VIBRANT_COLORS[index];
     }
 
-    private void glowColor(final Player player, final ChatColor color) {
-        final ScoreboardManager manager = Bukkit.getScoreboardManager();
-
-        if (manager == null)
-            return;
-
-        final Scoreboard scoreboard = manager.getMainScoreboard();
-        final Team team = scoreboard.registerNewTeam("arena-team-" + UUID.randomUUID());
-
-        team.setColor(color);
-        team.addEntry(player.getDisplayName());
-
-        this.teams.put(color, team);
-
-        player.setGlowing(true);
-    }
-
-    public void stopGlowing(final Player player) {
-        player.setGlowing(false);
-
-        final Team team = this.getTeam(player);
-
-        if (team == null)
-            return;
-
-        final ChatColor color = team.getColor();
-
-        this.teams.remove(color).unregister();
-    }
-
-    private Team getTeam(final Player p) {
-        for (final Team team : new ArrayList<>(this.teams.values())) {
-            if (team.getEntries().stream().noneMatch(entry -> entry.equalsIgnoreCase(p.getDisplayName())))
-                continue;
-
-            return team;
-        }
-
-        return null;
-    }
-
     public void clearTeams() {
-        for (final ChatColor color : new ArrayList<>(this.teams.keySet())) {
-            this.teams.remove(color).unregister();
-            this.performOnFighters(fighter -> fighter.setGlowing(false));
-        }
+        this.performOnFighters(fighter -> fighter.setGlowing(false));
     }
 
     private void leaveParkour(final Player player) {
@@ -322,8 +272,6 @@ public class Fight {
     public void endFight() {
         this.fightState = FightState.ENDING;
 
-        this.performOnFighters(this::stopGlowing);
-
         this.preFightData1.restore();
         this.preFightData2.restore();
 
@@ -362,10 +310,10 @@ public class Fight {
         this.handleDeath(loser);
         this.handleVictory(winner);
 
-        Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<red><winner> beat <loser> in the <arena> arena!",
+        Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<red><winner> beat <loser> in the <arena>arena!",
                 Placeholder.component("winner", winnerName),
                 Placeholder.component("loser", loserName),
-                Placeholder.parsed("arena", "arena".equals(this.arena.getArenaName()) ? "" : this.arena.getArenaName())
+                Placeholder.parsed("arena", "arena".equals(this.arena.getArenaName()) ? "" : " " + this.arena.getArenaName())
         ));
     }
 

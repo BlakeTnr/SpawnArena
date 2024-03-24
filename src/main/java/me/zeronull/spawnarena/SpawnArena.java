@@ -22,6 +22,7 @@ public class SpawnArena extends JavaPlugin {
         INSTANCE = this;
     }
 
+    @Override
     public void onEnable() {
         registerEvents();
         registerCommands();
@@ -66,6 +67,7 @@ public class SpawnArena extends JavaPlugin {
             command.setTabCompleter((TabCompleter) cmd);
     }
 
+    @Override
     public void onDisable() {
         this.shutdownArenas();
     }
