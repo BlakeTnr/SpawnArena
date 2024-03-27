@@ -374,6 +374,11 @@ public class Fight {
                 case "sumo" -> ArenaStatsBase.Values.SUMO_WIN_STREAK;
                 default -> null;
             };
+            case BEST_STREAK -> switch (arenaName.toLowerCase()) {
+                case "arena" -> ArenaStatsBase.Values.BEST_ARENA_WIN_STREAK;
+                case "sumo" -> ArenaStatsBase.Values.BEST_SUMO_WIN_STREAK;
+                default -> null;
+            };
             default -> null;
         };
 
