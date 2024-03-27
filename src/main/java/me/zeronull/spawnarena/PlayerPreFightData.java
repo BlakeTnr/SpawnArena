@@ -26,6 +26,7 @@ public class PlayerPreFightData {
     Location previousLocation;
     GameMode previousGameMode;
     double health;
+    int foodLevel;
     List<PotionEffect> effects;
 
     public PlayerPreFightData(Player player) {
@@ -38,6 +39,7 @@ public class PlayerPreFightData {
         previousLocation = player.getLocation();
         previousGameMode = player.getGameMode();
         health = player.getHealth();
+        foodLevel = player.getFoodLevel();
         effects = new ArrayList<>(player.getActivePotionEffects());
     }
 
@@ -57,6 +59,7 @@ public class PlayerPreFightData {
         this.previousLocation = BukkitSerialization.locationFromJson(new JSONObject(obj.getString("previous_location")));
         this.previousGameMode = GameMode.valueOf(obj.getString("previous_gamemode"));
         this.health = obj.getDouble("health");
+        this.foodLevel = obj.getInt("food_level");
     }
 
     public void restore() {
@@ -72,6 +75,7 @@ public class PlayerPreFightData {
         this.player.setFireTicks(0);
 
         this.player.setHealth(this.health);
+        this.player.setFoodLevel(this.foodLevel);
         this.player.setLevel(this.level);
         this.player.setExp(this.exp);
         this.player.getInventory().setContents(this.contents);
@@ -116,6 +120,7 @@ public class PlayerPreFightData {
         obj.put("previous_location", BukkitSerialization.locationToJson(this.previousLocation));
         obj.put("previous_gamemode", this.previousGameMode.name());
         obj.put("health", this.health);
+        obj.put("food_level", this.foodLevel);
 
         return obj;
     }

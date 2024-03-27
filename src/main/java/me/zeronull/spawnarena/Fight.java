@@ -15,6 +15,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -177,9 +178,15 @@ public class Fight {
 
         this.performOnFighters(fighter -> fighter.setGameMode(GameMode.SURVIVAL));
         this.performOnFighters(fighter -> fighter.setHealth(fighter.getMaxHealth()));
+        this.performOnFighters(fighter -> fighter.setFoodLevel(20));
 
-        if (this.arena.isShouldClearItems())
+        if (this.arena.isShouldClearItems()) {
             this.performOnFighters(fighter -> fighter.getInventory().clear());
+            this.performOnFighters(fighter -> {
+                for (final PotionEffect effect : new ArrayList<>(fighter.getActivePotionEffects()))
+                    fighter.removePotionEffect(effect.getType());
+            });
+        }
 
         if (this.arena.isGiveKnockBackStick()) {
             final ItemStack stick = new ItemStack(Material.STICK);
