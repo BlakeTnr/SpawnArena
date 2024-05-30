@@ -22,6 +22,18 @@ commands:
     description: Alter the arena mode
     permission: spawnarena.togglearenamode
     permission-message: "§cYou don't have permission!"
+  setupfight:
+    description: Add 2 players to the queue to ensure they fight each other
+    permission: spawnarena.setupfight
+    permission-message: "§cYou don't have permission!"
+  setarenaschematic:
+    description: Set the schematic of an arena
+    permission: spawnarena.setarenaschematic
+    permission-message: "§cYou don't have permission!"
+  setpastelocation:
+    description: Set the paste location of an arena
+    permission: spawnarena.setpastelocation
+    permission-message: "§cYou don't have permission!"
 
 permissions:
   spawnarena.setarenaspawn:
@@ -33,4 +45,10 @@ permissions:
   spawnarena.allowcommandsinfight:
     default: op
   spawnarena.togglearenamode:
+    default: op
+  spawnarena.setupfight:
+    default: op
+  spawnarena.setarenaschematic:
+    default: op
+  spawnarena.setpastelocation:
     default: op

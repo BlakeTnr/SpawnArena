@@ -123,6 +123,16 @@ public final class SavableArena extends Arena {
         return super.setGiveKnockBackStick(value);
     }
 
+    public ArenaOptions setPasteLocation(final Location location) {
+        this.save(config -> config.pasteLocation = location);
+        return this;
+    }
+
+    public ArenaOptions setSchematic(final String schematicPath) {
+        this.save(config -> config.schematic = schematicPath);
+        return this;
+    }
+
     public File getConfigFile() {
         final File configFile = new File(ARENAS_DIR, this.configName);
         return configFile;
@@ -134,5 +144,20 @@ public final class SavableArena extends Arena {
 
         action.accept(config);
         saveArenaConfig(configFile, config);
+    }
+
+    public void resetArena() {
+        final ArenaConfig config = getArenaConfig(this.getConfigFile());
+        final Location loc = config.pasteLocation;
+
+        if (loc == null)
+            return;
+
+        final File schematic = new File(config.schematic);
+
+        if (!schematic.exists())
+            throw new RuntimeException("Schematic does not exist");
+
+        WorldEditUtils.paste(loc, schematic);
     }
 }

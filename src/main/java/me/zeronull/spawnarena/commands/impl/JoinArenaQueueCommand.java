@@ -62,10 +62,13 @@ public class JoinArenaQueueCommand extends ArenaTabComplete implements CommandEx
             return true;
         }
 
-        arena.queue.addPlayerToQueue(player);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou've been added to the queue!"));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eWarning! If you have issues (e.g. losing inventory, want you inventory restored due to other issue), &c&l&ndo NOT&e rejoin the arena, tell warn staff and players, and avoid dying excessive amount of times. Otherwise, your inventory logs will be lost!"));
+        addToQueue(arena, player);
         return true;
     }
 
+    public static void addToQueue(final Arena arena, final Player player) {
+        arena.queue.addPlayerToQueue(player);
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou've been added to the queue!"));
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&eWarning! If you have issues (e.g. losing inventory, want you inventory restored due to other issue), &c&l&ndo NOT&e rejoin the arena, tell warn staff and players, and avoid dying excessive amount of times. Otherwise, your inventory logs will be lost!"));
+    }
 }

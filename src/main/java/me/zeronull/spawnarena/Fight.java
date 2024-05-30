@@ -291,6 +291,11 @@ public class Fight {
         this.tryCancel(this.starting);
         this.performShowLogic();
         this.clearTeams();
+
+        if (this.getArena() instanceof SavableArena && this.getArena().getArenaMode() == ArenaMode.SINGLE) {
+            final SavableArena savableArena = (SavableArena) this.getArena();
+            savableArena.resetArena();
+        }
     }
 
     public void announceWinner(Player whoDied) {

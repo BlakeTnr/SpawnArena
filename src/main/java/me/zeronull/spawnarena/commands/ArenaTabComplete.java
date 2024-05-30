@@ -2,6 +2,7 @@ package me.zeronull.spawnarena.commands;
 
 import me.zeronull.spawnarena.Arena;
 import me.zeronull.spawnarena.SpawnArena;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -12,9 +13,17 @@ import java.util.stream.Collectors;
 
 public abstract class ArenaTabComplete implements TabCompleter {
     private final int index;
+    private final boolean allowPlayersAfter;
+    private final int allowPlayersUntil;
 
     protected ArenaTabComplete(final int index) {
+        this(index, false, 0);
+    }
+
+    protected ArenaTabComplete(final int index, final boolean allowPlayersAfter, final int allowPlayersUntil) {
         this.index = index;
+        this.allowPlayersAfter = allowPlayersAfter;
+        this.allowPlayersUntil = allowPlayersUntil;
     }
 
     @Override
@@ -26,6 +35,12 @@ public abstract class ArenaTabComplete implements TabCompleter {
                     .collect(Collectors.toList());
         }
 
-        return new ArrayList<>();
+        if (this.allowPlayersAfter && args.length > allowPlayersUntil)
+            return new ArrayList<>();
+
+        return !this.allowPlayersAfter ? new ArrayList<>() : Bukkit.getOnlinePlayers().stream()
+                .map(p -> p.getName())
+                .filter(name -> name.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

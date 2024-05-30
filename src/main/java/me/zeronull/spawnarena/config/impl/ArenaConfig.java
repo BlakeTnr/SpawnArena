@@ -36,4 +36,10 @@ public final class ArenaConfig {
 
     @Comment("Mode of the arena: SINGLE, MULTI")
     public String arenaMode = ArenaMode.SINGLE.toString();
+
+    @Comment("Paste location of the arena (pastes the schematic)")
+    public Location pasteLocation = null;
+
+    @Comment("Schematic of the arena")
+    public String schematic = null;
 }

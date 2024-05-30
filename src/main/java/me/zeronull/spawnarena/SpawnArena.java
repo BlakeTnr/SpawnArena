@@ -1,9 +1,6 @@
 package me.zeronull.spawnarena;
 
-import me.zeronull.spawnarena.commands.impl.CreateArenaCommand;
-import me.zeronull.spawnarena.commands.impl.JoinArenaQueueCommand;
-import me.zeronull.spawnarena.commands.impl.SetArenaSpawnCommand;
-import me.zeronull.spawnarena.commands.impl.ToggleArenaModeCommand;
+import me.zeronull.spawnarena.commands.impl.*;
 import me.zeronull.spawnarena.config.ConfigHandler;
 import me.zeronull.spawnarena.events.*;
 import org.bukkit.Bukkit;
@@ -56,6 +53,9 @@ public class SpawnArena extends JavaPlugin {
         this.registerCommand("setarenaspawn", new SetArenaSpawnCommand());
         this.registerCommand("createarena", new CreateArenaCommand());
         this.registerCommand("togglearenamode", new ToggleArenaModeCommand());
+        this.registerCommand("setupfight", new SetUpFightCommand());
+        this.registerCommand("setarenaschematic", new SetArenaSchematicCommand());
+        this.registerCommand("setpastelocation", new SetPasteLocationCommand());
     }
 
     private void registerCommand(final String cmdName, final CommandExecutor cmd) {
