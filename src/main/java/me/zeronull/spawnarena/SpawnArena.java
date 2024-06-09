@@ -46,6 +46,7 @@ public class SpawnArena extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaPlayerConsumeEvent(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaProjectileDupeFix(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ArenaEntityHideEvent(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ArenaInventoryOpenEvent(), this);
     }
 
     private void registerCommands() {
