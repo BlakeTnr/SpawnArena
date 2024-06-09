@@ -17,8 +17,8 @@
 
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>paper-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
             <id>sk89q-repo</id>
@@ -106,9 +106,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <outputFile>D:\TestServer1.20.2\plugins\SpawnEvents.jar</outputFile>
-                </configuration>
             </plugin>
         </plugins>
         <resources>
