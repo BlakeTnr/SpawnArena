@@ -31,7 +31,7 @@ public final class ArenaPlayerInteractEvent implements Listener {
             return;
         }
 
-        if (fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.COUNTDOWN) {
             return;
         }
 

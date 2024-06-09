@@ -50,7 +50,7 @@ public final class LiquidListener implements Listener, Runnable {
             return;
         }
 
-        if (fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.COUNTDOWN) {
             return;
         }
 

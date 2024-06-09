@@ -35,7 +35,7 @@ public final class ArenaInventoryOpenEvent implements Listener {
             return;
         }
 
-        if (fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.COUNTDOWN) {
             return;
         }
 

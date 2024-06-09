@@ -29,7 +29,7 @@ public class ArenaPlayerLeave implements Listener {
         if (fight == null)
             return;
 
-        if (fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.COUNTDOWN) {
             return;
         }
 

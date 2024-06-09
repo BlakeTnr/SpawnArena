@@ -38,7 +38,7 @@ public class Fight {
     };
 
     UUID uuid = UUID.randomUUID();
-    FightState fightState = FightState.INITALIZING;
+    FightState fightState = FightState.COUNTDOWN;
     Arena arena;
     PlayerPreFightData preFightData1;
     PlayerPreFightData preFightData2;
@@ -57,6 +57,10 @@ public class Fight {
         return fightState;
     }
 
+    /**
+     * Cancels the fight. Pretty much just endFight without restoring inventories
+     * Good for canceling without restoring
+     */
     public void cancelFight() {
         this.fightState = FightState.ENDING;
 
@@ -164,6 +168,7 @@ public class Fight {
     }
 
     public void startFight() {
+        this.fightState = FightState.PRE_FIGHT_START;
         Arena.ArenaUtils.kickOutLingeringPlayers();
 
         this.color = this.getRandomColor();
@@ -276,6 +281,9 @@ public class Fight {
             fighter.teleport(this.arena.spawnPoint2);
     }
 
+    /**
+     * Ends the fight and restores inventories
+     */
     public void endFight() {
         this.fightState = FightState.ENDING;
 

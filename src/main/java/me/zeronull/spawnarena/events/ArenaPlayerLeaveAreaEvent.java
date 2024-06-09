@@ -34,7 +34,7 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
         if (fight == null)
             return;
 
-        if (fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING) {
+        if (fight.getState() == FightState.ENDING || fight.getState() == FightState.COUNTDOWN) {
             return;
         }
 
@@ -77,7 +77,7 @@ public class ArenaPlayerLeaveAreaEvent implements Listener {
         if (fight == null)
             return;
 
-        if (fight.getState() == FightState.ENDING || fight.getState() == FightState.INITALIZING)
+        if (fight.getState() == FightState.ENDING || fight.getState() == FightState.COUNTDOWN)
             return;
 
         final Arena to = SpawnArena.arenas.of(p.getLocation());
