@@ -8,6 +8,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
+
+import java.util.List;
 
 public class JoinArenaQueueCommand extends ArenaTabComplete implements CommandExecutor {
     public JoinArenaQueueCommand() {
@@ -41,6 +44,11 @@ public class JoinArenaQueueCommand extends ArenaTabComplete implements CommandEx
 
         Player player = (Player) sender;
 
+        if (this.isInVivElytraCourse(player)) {
+            sender.sendMessage(ChatColor.RED + "You cannot join the arena whilst in the VivElytra course.");
+            return true;
+        }
+
         if (SpawnArena.arenas.isInQueue(player, arena.queue)) {
             sender.sendMessage(ChatColor.RED + "You are already queued for another arena.");
             return true;
@@ -64,6 +72,11 @@ public class JoinArenaQueueCommand extends ArenaTabComplete implements CommandEx
 
         addToQueue(arena, player);
         return true;
+    }
+
+    private boolean isInVivElytraCourse(final Player player) {
+        final List<MetadataValue> values = player.getMetadata("vivelytra_in_course");
+        return values.stream().anyMatch(meta -> meta.asBoolean());
     }
 
     public static void addToQueue(final Arena arena, final Player player) {
