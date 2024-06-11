@@ -2,6 +2,7 @@ package me.zeronull.spawnarena.events;
 
 import com.sk89q.worldguard.bukkit.protection.events.DisallowedPVPEvent;
 import me.zeronull.spawnarena.Arena;
+import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
 import org.bukkit.entity.Player;
@@ -34,6 +35,12 @@ public class ArenaWorldguardPvPEvent implements Listener {
             return;
 
         if (!arena.equals(SpawnArena.arenas.of(damager.getLocation())))
+            return;
+
+        final Fight damagerFight = arena.getFight(damager);
+        final Fight defenderFight = arena.getFight(defender);
+
+        if (damagerFight != null && defenderFight != null && !damagerFight.equals(defenderFight))
             return;
 
 //        if(SpawnArena.arena.getFight().getState() == FightState.INITALIZING) {
