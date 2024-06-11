@@ -81,6 +81,12 @@
             <version>4.1.68.Final</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.booksaw.betterTeams</groupId>
+            <artifactId>BetterTeams</artifactId>
+            <version>4.9.4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
