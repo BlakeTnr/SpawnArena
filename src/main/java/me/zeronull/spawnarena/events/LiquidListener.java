@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public final class LiquidListener implements Listener, Runnable {
     public LiquidListener() {
-        SpawnArena.scheduler.runTaskTimer(this, 0L, (3 * 20L));
+        SpawnArena.scheduler.runTaskTimer(this, 1L, (3 * 20L));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
