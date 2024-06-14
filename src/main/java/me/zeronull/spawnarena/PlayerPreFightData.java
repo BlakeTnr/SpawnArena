@@ -69,7 +69,7 @@ public class PlayerPreFightData {
         ArenaPlayerConsumeEvent.PLAYER_FINISH_GAME_MAP.put(this.player.getUniqueId(), Instant.now().getEpochSecond());
 
         this.player.closeInventory();
-        this.player.teleport(this.previousLocation);
+        FoliaUtils.teleport(this.player, this.previousLocation);
 
         // These 2 just assume they were at this before
         this.player.setFireTicks(0);

@@ -1,5 +1,7 @@
 package me.zeronull.spawnarena;
 
+import me.nahu.scheduler.wrapper.WrappedScheduler;
+import me.nahu.scheduler.wrapper.WrappedSchedulerBuilder;
 import me.zeronull.spawnarena.commands.impl.*;
 import me.zeronull.spawnarena.config.ConfigHandler;
 import me.zeronull.spawnarena.events.*;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 public class SpawnArena extends JavaPlugin {
     public static SpawnArena INSTANCE;
     public static Arenas arenas;
+    public static WrappedScheduler scheduler;
 
     public SpawnArena() {
         INSTANCE = this;
@@ -21,6 +24,9 @@ public class SpawnArena extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        final WrappedSchedulerBuilder schedulerBuilder = WrappedSchedulerBuilder.builder().plugin(this);
+        scheduler = schedulerBuilder.build();
+
         registerEvents();
         registerCommands();
 

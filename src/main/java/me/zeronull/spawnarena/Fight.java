@@ -3,6 +3,8 @@ package me.zeronull.spawnarena;
 import club.hellin.vivillyapi.SpigotCoreBase;
 import club.hellin.vivillyapi.models.impl.PlayerStateBase;
 import club.hellin.vivillyapi.models.impl.objects.ArenaStatsBase;
+import me.nahu.scheduler.wrapper.runnable.WrappedRunnable;
+import me.nahu.scheduler.wrapper.task.WrappedTask;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -16,8 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -44,7 +44,7 @@ public class Fight {
     PlayerPreFightData preFightData2;
     Player fighter1;
     Player fighter2;
-    BukkitTask starting;
+    WrappedTask starting;
     ChatColor color;
 
     private Map<UUID, ChatColor> teams = new HashMap<>(); // UUID -> Original ChatColor
@@ -87,7 +87,7 @@ public class Fight {
         this.fighter2 = fighter2;
 
         Plugin plugin = SpawnArena.getPlugin(SpawnArena.class);
-        this.starting = new BukkitRunnable() {
+        this.starting = new WrappedRunnable() {
             int counter = 5;
 
             @Override
@@ -106,15 +106,15 @@ public class Fight {
                 }
             }
 
-        }.runTaskTimer(plugin, 20L, 20L);
+        }.runTaskTimer(SpawnArena.scheduler, 20L, 20L);
     }
 
-    private void tryCancel(final BukkitTask task) {
+    private void tryCancel(final WrappedTask task) {
         if (task != null && !task.isCancelled())
             task.cancel();
     }
 
-    private boolean onlineCheck(final BukkitRunnable runnable) {
+    private boolean onlineCheck(final WrappedRunnable runnable) {
         for (final Player fighter : this.getFighters()) {
             if (fighter.isOnline())
                 continue;
@@ -276,9 +276,9 @@ public class Fight {
         final UUID uuid = fighter.getUniqueId();
 
         if (this.fighter1 != null && this.fighter1.getUniqueId().equals(uuid))
-            fighter.teleport(this.arena.spawnPoint1);
+            FoliaUtils.teleport(fighter, this.arena.spawnPoint1);
         else if (this.fighter2 != null && this.fighter2.getUniqueId().equals(uuid))
-            fighter.teleport(this.arena.spawnPoint2);
+            FoliaUtils.teleport(fighter, this.arena.spawnPoint2);
     }
 
     /**

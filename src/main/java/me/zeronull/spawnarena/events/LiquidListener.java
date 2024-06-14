@@ -5,7 +5,6 @@ import me.zeronull.spawnarena.Fight;
 import me.zeronull.spawnarena.FightState;
 import me.zeronull.spawnarena.SpawnArena;
 import me.zeronull.spawnarena.events.impl.PlayerLiquidEnterEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,7 +13,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public final class LiquidListener implements Listener, Runnable {
     public LiquidListener() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(SpawnArena.INSTANCE, this, 0L, (3 * 20L));
+        SpawnArena.scheduler.runTaskTimer(this, 0L, (3 * 20L));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -26,8 +25,10 @@ public final class LiquidListener implements Listener, Runnable {
     @Override
     public void run() {
         for (final Player p : SpawnArena.INSTANCE.getServer().getOnlinePlayers()) {
-            if (p.getLocation().getBlock().isLiquid())
-                SpawnArena.INSTANCE.getServer().getPluginManager().callEvent(new PlayerLiquidEnterEvent(p));
+            SpawnArena.scheduler.runTaskAtEntity(p, () -> {
+                if (p.getLocation().getBlock().isLiquid())
+                    SpawnArena.INSTANCE.getServer().getPluginManager().callEvent(new PlayerLiquidEnterEvent(p));
+            });
         }
     }
 
