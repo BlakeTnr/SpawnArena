@@ -119,7 +119,19 @@
                             <relocations>
                                 <relocation>
                                     <pattern>me.nahu.scheduler.wrapper</pattern>
-                                    <shadedPattern>club.hellin.boosters.lib.foliawrapper</shadedPattern>
+                                    <shadedPattern>me.zeronull.spawnarena.lib.foliawrapper</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.exlll</pattern>
+                                    <shadedPattern>me.zeronull.spawnarena.lib.de.exlll</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.json</pattern>
+                                    <shadedPattern>me.zeronull.spawnarena.lib.org.json</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.snakeyaml</pattern>
+                                    <shadedPattern>me.zeronull.spawnarena.lib.org.snakeyaml</shadedPattern>
                                 </relocation>
                             </relocations>
                             <minimizeJar>true</minimizeJar>
