@@ -1,13 +1,16 @@
 package me.zeronull.spawnarena.config;
 
-import me.zeronull.spawnarena.Arena;
-import me.zeronull.spawnarena.ArenaQueue;
-import me.zeronull.spawnarena.SavableArena;
+import de.exlll.configlib.YamlConfigurationProperties;
+import de.exlll.configlib.YamlConfigurations;
+import me.zeronull.spawnarena.*;
 import me.zeronull.spawnarena.config.impl.ArenaConfig;
+import me.zeronull.spawnarena.config.impl.PreFightConfig;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ConfigHandler {
     private static ConfigHandler config;
@@ -23,50 +26,50 @@ public class ConfigHandler {
         return config;
     }
 
-//    public void saveCustomConfig(GameConfig config) {
-//        YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
-//                .build();
-//
-//        SpawnArena plugin = SpawnArena.getPlugin(SpawnArena.class);
-//        Path configFile = new File(plugin.getDataFolder(), "config.yml").toPath();
-//
-//        YamlConfigurations.save(
-//                configFile,
-//                GameConfig.class,
-//                config,
-//                properties
-//        );
-//    }
-//
-//    public void updateCustomConfig() {
-//        YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
-//                .build();
-//
-//        SpawnArena plugin = SpawnArena.getPlugin(SpawnArena.class);
-//        Path configFile = new File(plugin.getDataFolder(), "config.yml").toPath();
-//
-//        YamlConfigurations.update(
-//                configFile,
-//                GameConfig.class,
-//                properties
-//        );
-//    }
-//
-//    public GameConfig getCustomConfig() {
-//        YamlConfigurationProperties properties = ConfigLib.BUKKIT_DEFAULT_PROPERTIES.toBuilder()
-//                .build();
-//
-//        SpawnArena plugin = SpawnArena.getPlugin(SpawnArena.class);
-//        Path configFile = new File(plugin.getDataFolder(), "config.yml").toPath();
-//
-//        GameConfig config = YamlConfigurations.load(
-//                configFile,
-//                GameConfig.class,
-//                properties
-//        );
-//
-//        return config;
-//    }
+    public void savePreFightConfig(PreFightConfig config) {
+        YamlConfigurationProperties properties = PreFightConfig.PROPERTIES;
+
+        SpawnArena plugin = SpawnArena.getPlugin(SpawnArena.class);
+        Path configFile = new File(plugin.getDataFolder(), "prefights.yml").toPath();
+
+        YamlConfigurations.save(
+                configFile,
+                PreFightConfig.class,
+                config,
+                properties
+        );
+    }
+
+    public void updatePreFightConfig() {
+        YamlConfigurationProperties properties = PreFightConfig.PROPERTIES;
+
+        SpawnArena plugin = SpawnArena.getPlugin(SpawnArena.class);
+        Path configFile = new File(plugin.getDataFolder(), "prefights.yml").toPath();
+
+        YamlConfigurations.update(
+                configFile,
+                PreFightConfig.class,
+                properties
+        );
+    }
+
+    public PreFightConfig getPreFightConfig() {
+        YamlConfigurationProperties properties = PreFightConfig.PROPERTIES;
+
+        SpawnArena plugin = SpawnArena.getPlugin(SpawnArena.class);
+        Path configFile = new File(plugin.getDataFolder(), "prefights.yml").toPath();
+
+        if (!configFile.toFile().exists())
+            return null;
+
+        PreFightConfig config = YamlConfigurations.load(
+                configFile,
+                PreFightConfig.class,
+                properties
+        );
+
+        return config;
+    }
 
     public List<Arena> registerArenasFromConfig() {
         final List<Arena> arenas = new ArrayList<>();
@@ -94,6 +97,12 @@ public class ConfigHandler {
         }
 
         return arenas;
+    }
+
+    public void register(final UUID uuid, final PlayerPreFightData data) {
+        final PreFightConfig conf = getPreFightConfig();
+        conf.map.put(uuid, data);
+        savePreFightConfig(conf);
     }
 
 //    public void setSpawnpoint(Location location, int spawnPointNumber) {

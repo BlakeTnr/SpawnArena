@@ -49,7 +49,11 @@ public final class ToggleArenaModeCommand extends ArenaTabComplete implements Co
             return true;
         }
 
-        final ArenaMode curentArenaMode = arena.getArenaMode();
+        ArenaMode curentArenaMode = arena.getArenaMode();
+
+        if (curentArenaMode == null)
+            curentArenaMode = ArenaMode.SINGLE;
+
         final ArenaMode next = curentArenaMode.next();
 
         arena.setArenaMode(next.toString());

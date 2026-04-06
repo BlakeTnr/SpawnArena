@@ -1,7 +1,9 @@
 package me.zeronull.spawnarena;
 
+import me.zeronull.spawnarena.config.ConfigHandler;
+import me.zeronull.spawnarena.config.impl.PreFightConfig;
 import me.zeronull.spawnarena.events.ArenaPlayerConsumeEvent;
-import me.zeronull.spawnarena.inventory.BukkitSerialization;
+import me.zeronull.spawnarena.inventory.ItemSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -10,24 +12,26 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PlayerPreFightData {
-    Player player;
-    String username;
-    ItemStack[] contents;
-    ItemStack[] armorContents;
-    int level;
-    float exp;
-    Location previousLocation;
-    GameMode previousGameMode;
-    double health;
-    int foodLevel;
-    List<PotionEffect> effects;
+public final class PlayerPreFightData {
+    public Player player;
+
+    protected String username;
+    protected ItemStack[] contents;
+    protected ItemStack[] armorContents;
+    protected int level;
+    protected float exp;
+    protected Location previousLocation;
+    protected GameMode previousGameMode;
+    protected double health;
+    protected int foodLevel;
+    protected List<PotionEffect> effects;
 
     public PlayerPreFightData(Player player) {
         this.player = player;
@@ -41,6 +45,18 @@ public class PlayerPreFightData {
         health = player.getHealth();
         foodLevel = player.getFoodLevel();
         effects = new ArrayList<>(player.getActivePotionEffects());
+
+        final ConfigHandler handler = ConfigHandler.getInstance();
+
+        final File configFile = new File(SpawnArena.INSTANCE.getDataFolder(), "prefights.yml");
+
+        if (!configFile.exists())
+            handler.updatePreFightConfig();
+
+        final PreFightConfig config = handler.getPreFightConfig();
+
+        config.map.put(player.getUniqueId(), this);
+        handler.savePreFightConfig(config);
     }
 
     /**
@@ -49,14 +65,14 @@ public class PlayerPreFightData {
      * @param obj
      * @throws IOException
      */
-    public PlayerPreFightData(final JSONObject obj) throws IOException {
+    public PlayerPreFightData(final JSONObject obj) throws Exception {
         this.player = Bukkit.getPlayer(UUID.fromString(obj.getString("uuid")));
         this.username = obj.getString("username");
-        this.contents = BukkitSerialization.itemStackArrayFromBase64(obj.getString("contents"));
-        this.armorContents = BukkitSerialization.itemStackArrayFromBase64(obj.getString("armor_contents"));
+        this.contents = ItemSerializer.deserialize(obj.getString("contents"));
+        this.armorContents = ItemSerializer.deserialize(obj.getString("armor_contents"));
         this.level = obj.getInt("level");
         this.exp = obj.getFloat("exp");
-        this.previousLocation = BukkitSerialization.locationFromJson(new JSONObject(obj.getString("previous_location")));
+        this.previousLocation = LocationUtils.locationFromJson(new JSONObject(obj.getString("previous_location")));
         this.previousGameMode = GameMode.valueOf(obj.getString("previous_gamemode"));
         this.health = obj.getDouble("health");
         this.foodLevel = obj.getInt("food_level");
@@ -83,6 +99,12 @@ public class PlayerPreFightData {
         this.player.setGameMode(this.previousGameMode);
 
         this.restorePotionEffects();
+
+        final ConfigHandler handler = ConfigHandler.getInstance();
+        final PreFightConfig config = handler.getPreFightConfig();
+
+        config.map.remove(player.getUniqueId());
+        handler.savePreFightConfig(config);
     }
 
     private void restorePotionEffects() {
@@ -108,16 +130,16 @@ public class PlayerPreFightData {
         return newArray;
     }
 
-    public JSONObject toJsonObject() {
+    public JSONObject toJsonObject() throws Exception {
         final JSONObject obj = new JSONObject();
 
         obj.put("uuid", this.player.getUniqueId().toString());
         obj.put("username", this.username);
-        obj.put("contents", BukkitSerialization.itemStackArrayToBase64(this.contents));
-        obj.put("armor_contents", BukkitSerialization.itemStackArrayToBase64(this.armorContents));
+        obj.put("contents", ItemSerializer.serialize(this.contents));
+        obj.put("armor_contents", ItemSerializer.serialize(this.armorContents));
         obj.put("level", this.level);
         obj.put("exp", this.exp);
-        obj.put("previous_location", BukkitSerialization.locationToJson(this.previousLocation));
+        obj.put("previous_location", LocationUtils.locationToJson(this.previousLocation).toString());
         obj.put("previous_gamemode", this.previousGameMode.name());
         obj.put("health", this.health);
         obj.put("food_level", this.foodLevel);

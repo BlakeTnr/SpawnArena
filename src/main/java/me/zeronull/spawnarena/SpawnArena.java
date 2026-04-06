@@ -13,6 +13,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 
+/**
+ * Apparently there is a dupe with loyalty tridents
+ */
 public class SpawnArena extends JavaPlugin {
     public static SpawnArena INSTANCE;
     public static Arenas arenas;
@@ -66,6 +69,7 @@ public class SpawnArena extends JavaPlugin {
         this.registerCommand("setupfight", new SetUpFightCommand());
         this.registerCommand("setarenaschematic", new SetArenaSchematicCommand());
         this.registerCommand("setpastelocation", new SetPasteLocationCommand());
+        this.registerCommand("restore", new RestoreCommand());
     }
 
     private void registerCommand(final String cmdName, final CommandExecutor cmd) {

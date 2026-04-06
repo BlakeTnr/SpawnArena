@@ -36,6 +36,13 @@ public final class CreateArenaCommand implements CommandExecutor {
                 return true;
             }
 
+            final Arena a = SpawnArena.arenas.of(arenaName);
+
+            if (a != null) {
+                sender.sendMessage(ChatColor.RED + "An arena already exists under that name.");
+                return true;
+            }
+
             final SavableArena arena = new SavableArena(arenaName);
             SavableArena.createArenaConfig(arena.getConfigFile());
             arena.save(config -> config.arenaName = arena.getArenaName());

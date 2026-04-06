@@ -36,6 +36,10 @@ commands:
     description: Set the paste location of an arena
     permission: spawnarena.setpastelocation
     permission-message: "§cYou don't have permission!"
+  restore:
+    description: Restore a players data from before the fight
+    permission: spawnarena.restore
+    permission-message: "§cYou don't have permission!"
 
 permissions:
   spawnarena.setarenaspawn:
@@ -53,4 +57,6 @@ permissions:
   spawnarena.setarenaschematic:
     default: op
   spawnarena.setpastelocation:
+    default: op
+  spawnarena.restore:
     default: op
