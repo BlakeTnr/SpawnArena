@@ -328,12 +328,13 @@ public class Fight {
         }
 
         this.handleDeath(loser);
-        this.handleVictory(winner);
+        final int ws = this.handleVictory(winner);
 
-        Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_red><winner> beat <loser> in the <arena>arena!",
+        Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<dark_red><winner> beat <loser> in the <arena>arena<ws_str>!",
                 Placeholder.component("winner", winnerName),
                 Placeholder.component("loser", loserName),
-                Placeholder.parsed("arena", "arena".equals(this.arena.getArenaName()) ? "" : this.arena.getArenaName() + " ")
+                Placeholder.parsed("arena", "arena".equals(this.arena.getArenaName()) ? "" : this.arena.getArenaName() + " "),
+                Placeholder.parsed("ws_str", ws > 2 ? String.format(" with a winstreak of <white>%s<dark_red>", ws) : "")
         ));
     }
 
@@ -353,7 +354,11 @@ public class Fight {
         return this.arena;
     }
 
-    private void handleVictory(final Player winner) {
+    /**
+     * @param winner
+     * @return Win streak
+     */
+    private int handleVictory(final Player winner) {
         ArenaStatsBase.Values winStreakValue = this.getValue(this.arena.arenaName, ValueType.STREAK);
         ArenaStatsBase.Values winsValue = this.getValue(this.arena.arenaName, ValueType.WINS);
         ArenaStatsBase.Values bestWinStreakValue = this.getValue(this.arena.arenaName, ValueType.BEST_STREAK);
@@ -372,7 +377,11 @@ public class Fight {
                 stats.setInt(bestWinStreakValue, newWinStreak);
 
             SpigotCoreBase.INSTANCE.getWs().updatePlayerState(state);
+
+            return newWinStreak;
         }
+
+        return -1;
     }
 
     private ArenaStatsBase.Values getValue(final String arenaName, final ValueType type) {
