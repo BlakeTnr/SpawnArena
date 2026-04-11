@@ -41,7 +41,7 @@ public final class RestoreCommand implements CommandExecutor {
         config.map.remove(player.getUniqueId());
         handler.savePreFightConfig(config);
 
-        sender.sendMessage(ChatColor.GREEN + "Attempted to restore the items of %s.", player.getName());
+        sender.sendMessage(ChatColor.GREEN + String.format("Attempted to restore the items of %s.", player.getName()));
         return true;
     }
 }

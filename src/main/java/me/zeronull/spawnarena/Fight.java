@@ -1,6 +1,6 @@
 package me.zeronull.spawnarena;
 
-import club.hellin.vivillyapi.SpigotCoreBase;
+import club.hellin.vivillyapi.CoreAPI;
 import club.hellin.vivillyapi.models.impl.PlayerStateBase;
 import club.hellin.vivillyapi.models.impl.objects.ArenaStatsBase;
 import me.nahu.scheduler.wrapper.runnable.WrappedRunnable;
@@ -340,13 +340,13 @@ public class Fight {
 
     private void handleDeath(final Player loser) {
         ArenaStatsBase.Values winStreakValue = this.getValue(this.arena.arenaName, ValueType.STREAK);
-        PlayerStateBase state = SpigotCoreBase.INSTANCE.getWs().getPlayerStateMap().get(loser.getUniqueId());
+        PlayerStateBase state = CoreAPI.get().getWs().getPlayerStateMap().get(loser.getUniqueId());
 
         if (state != null && winStreakValue != null) {
             final ArenaStatsBase stats = state.getArenaStats();
 
             stats.setInt(winStreakValue, 0);
-            SpigotCoreBase.INSTANCE.getWs().updatePlayerState(state);
+            CoreAPI.get().getWs().updatePlayerState(state);
         }
     }
 
@@ -363,7 +363,7 @@ public class Fight {
         ArenaStatsBase.Values winsValue = this.getValue(this.arena.arenaName, ValueType.WINS);
         ArenaStatsBase.Values bestWinStreakValue = this.getValue(this.arena.arenaName, ValueType.BEST_STREAK);
 
-        PlayerStateBase state = SpigotCoreBase.INSTANCE.getWs().getPlayerStateMap().get(winner.getUniqueId());
+        PlayerStateBase state = CoreAPI.get().getWs().getPlayerStateMap().get(winner.getUniqueId());
 
         if (state != null && winStreakValue != null && winsValue != null && bestWinStreakValue != null) {
             final ArenaStatsBase stats = state.getArenaStats();
@@ -376,7 +376,7 @@ public class Fight {
             if (newWinStreak > stats.getInt(bestWinStreakValue))
                 stats.setInt(bestWinStreakValue, newWinStreak);
 
-            SpigotCoreBase.INSTANCE.getWs().updatePlayerState(state);
+            CoreAPI.get().getWs().updatePlayerState(state);
 
             return newWinStreak;
         }
